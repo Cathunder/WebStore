@@ -31,5 +31,5 @@ public class PointHistoryEntity extends BaseEntity {
   private HistoryType type;
 
   private int amount;
-  private LocalDateTime transactionDate;
+  private LocalDateTime transactionAt;
 }

@@ -14,8 +14,7 @@
 </div>
 
 ## ERD
-![erd](https://github.com/Cathunder/WebStore/assets/102372626/afe11dc8-a091-456d-ab68-a2d451f2098b)
-
+![erd](https://github.com/Cathunder/WebStore/assets/102372626/3d74de16-bce5-43c4-8031-212b5893310e)
 
 ## 프로젝트 기능 및 설계
 ### [유저]

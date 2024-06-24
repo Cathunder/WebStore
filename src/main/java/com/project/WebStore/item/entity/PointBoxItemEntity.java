@@ -36,7 +36,7 @@ public class PointBoxItemEntity extends BaseEntity {
 
   private int requiredPoint;
   private int stock;
-  private LocalDateTime resetTime;
+  private LocalDateTime resetDateTime;
   private int dailyLimit;
   private LocalDateTime startedAt;
   private LocalDateTime endedAt;
