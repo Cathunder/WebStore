@@ -30,6 +30,7 @@ public class UserDto {
         .point(userEntity.getPoint())
         .cash(userEntity.getCash())
         .createdAt(userEntity.getCreatedAt())
+        .updatedAt(userEntity.getUpdatedAt())
         .build();
   }
 }

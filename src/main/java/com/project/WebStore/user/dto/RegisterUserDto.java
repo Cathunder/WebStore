@@ -45,8 +45,6 @@ public class RegisterUserDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
     private LocalDateTime createdAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
-    private LocalDateTime updatedAt;
 
     public static Response fromDto(UserDto userDto) {
       return Response.builder()
@@ -57,7 +55,6 @@ public class RegisterUserDto {
           .point(userDto.getPoint())
           .cash(userDto.getCash())
           .createdAt(userDto.getCreatedAt())
-          .updatedAt(userDto.getUpdatedAt())
           .build();
     }
   }
