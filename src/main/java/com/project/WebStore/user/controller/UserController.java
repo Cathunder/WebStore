@@ -1,5 +1,6 @@
 package com.project.WebStore.user.controller;
 
+import com.project.WebStore.user.dto.LoginUserDto;
 import com.project.WebStore.user.dto.RegisterUserDto;
 import com.project.WebStore.user.dto.UserDto;
 import com.project.WebStore.user.service.UserService;
@@ -22,5 +23,10 @@ public class UserController {
   public ResponseEntity<?> register(@RequestBody @Valid RegisterUserDto.Request request) {
     UserDto userDto = userService.register(request);
     return ResponseEntity.ok(RegisterUserDto.Response.fromDto(userDto));
+  }
+
+  @PostMapping("/signIn")
+  public ResponseEntity<?> signIn(@RequestBody LoginUserDto.Request request) {
+    return ResponseEntity.ok(userService.signIn(request));
   }
 }
