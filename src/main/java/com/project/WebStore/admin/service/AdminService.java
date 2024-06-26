@@ -1,10 +1,13 @@
 package com.project.WebStore.admin.service;
 
+import static com.project.WebStore.exception.ErrorCode.*;
+
 import com.project.WebStore.admin.dto.AdminDto;
 import com.project.WebStore.admin.dto.LoginAdminDto;
 import com.project.WebStore.admin.dto.RegisterAdminDto;
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.admin.repository.AdminRepository;
+import com.project.WebStore.exception.WebStoreException;
 import com.project.WebStore.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +35,7 @@ public class AdminService implements UserDetailsService {
   @Transactional
   public AdminDto register(RegisterAdminDto.Request request) {
     if (adminRepository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("동일한 이메일이 존재합니다.");
+      throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
     AdminEntity adminEntity = AdminEntity.builder()
@@ -47,10 +50,10 @@ public class AdminService implements UserDetailsService {
   public LoginAdminDto.Response signIn(LoginAdminDto.Request request) {
 
     AdminEntity adminEntity = adminRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+        .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
 
     if (!passwordEncoder.matches(request.getPassword(), adminEntity.getPassword())) {
-      throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+      throw new WebStoreException(PASSWORD_INCORRECT);
     }
 
     String accessToken = jwtProvider.generateAccessToken(adminEntity);

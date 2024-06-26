@@ -1,5 +1,10 @@
 package com.project.WebStore.user.service;
 
+import static com.project.WebStore.exception.ErrorCode.DUPLICATED_EMAIL;
+import static com.project.WebStore.exception.ErrorCode.EMAIL_NOT_FOUND;
+import static com.project.WebStore.exception.ErrorCode.PASSWORD_INCORRECT;
+
+import com.project.WebStore.exception.WebStoreException;
 import com.project.WebStore.security.JwtProvider;
 import com.project.WebStore.user.dto.LoginUserDto;
 import com.project.WebStore.user.dto.RegisterUserDto;
@@ -32,7 +37,7 @@ public class UserService implements UserDetailsService {
   @Transactional
   public UserDto register(RegisterUserDto.Request request) {
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("동일한 이메일이 존재합니다.");
+      throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
     UserEntity userEntity = UserEntity.builder()
@@ -50,10 +55,10 @@ public class UserService implements UserDetailsService {
   public LoginUserDto.Response signIn(LoginUserDto.Request request) {
 
     UserEntity userEntity = userRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+        .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
 
     if (!passwordEncoder.matches(request.getPassword(), userEntity.getPassword())) {
-      throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+      throw new WebStoreException(PASSWORD_INCORRECT);
     }
 
     String accessToken = jwtProvider.generateAccessToken(userEntity);
