@@ -36,7 +36,7 @@ public class RegisterUserDto {
   @AllArgsConstructor
   @Builder
   public static class Response {
-    private Long id;
+    private Long userId;
     private String email;
     private String password;
     private String nickname;
@@ -48,7 +48,7 @@ public class RegisterUserDto {
 
     public static Response fromDto(UserDto userDto) {
       return Response.builder()
-          .id(userDto.getId())
+          .userId(userDto.getId())
           .email(userDto.getEmail())
           .password(userDto.getPassword())
           .nickname(userDto.getNickname())
