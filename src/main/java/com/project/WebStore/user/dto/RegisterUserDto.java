@@ -45,17 +45,5 @@ public class RegisterUserDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
     private LocalDateTime createdAt;
-
-    public static Response fromDto(UserDto userDto) {
-      return Response.builder()
-          .userId(userDto.getId())
-          .email(userDto.getEmail())
-          .password(userDto.getPassword())
-          .nickname(userDto.getNickname())
-          .point(userDto.getPoint())
-          .cash(userDto.getCash())
-          .createdAt(userDto.getCreatedAt())
-          .build();
-    }
   }
 }

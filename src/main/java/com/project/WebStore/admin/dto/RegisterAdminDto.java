@@ -38,14 +38,5 @@ public class RegisterAdminDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
     private LocalDateTime createdAt;
-
-    public static RegisterAdminDto.Response fromDto(AdminDto adminDto) {
-      return RegisterAdminDto.Response.builder()
-          .adminId(adminDto.getId())
-          .email(adminDto.getEmail())
-          .password(adminDto.getPassword())
-          .createdAt(adminDto.getCreatedAt())
-          .build();
-    }
   }
 }

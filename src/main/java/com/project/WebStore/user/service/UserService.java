@@ -35,20 +35,33 @@ public class UserService implements UserDetailsService {
   }
 
   @Transactional
-  public UserDto register(RegisterUserDto.Request request) {
+  public RegisterUserDto.Response register(RegisterUserDto.Request request) {
     if (userRepository.existsByEmail(request.getEmail())) {
       throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
-    UserEntity userEntity = UserEntity.builder()
+    UserEntity userEntity = createUserEntity(request);
+    userRepository.save(userEntity);
+
+    return RegisterUserDto.Response.builder()
+        .userId(userEntity.getId())
+        .email(userEntity.getEmail())
+        .password(userEntity.getPassword())
+        .nickname(userEntity.getNickname())
+        .point(userEntity.getPoint())
+        .cash(userEntity.getCash())
+        .createdAt(userEntity.getCreatedAt())
+        .build();
+  }
+
+  private UserEntity createUserEntity(RegisterUserDto.Request request) {
+    return UserEntity.builder()
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .nickname(request.getNickname())
         .point(1000)
         .cash(0)
         .build();
-
-    return UserDto.fromEntity(userRepository.save(userEntity));
   }
 
   @Transactional

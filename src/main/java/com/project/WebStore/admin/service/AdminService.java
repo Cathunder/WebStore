@@ -4,7 +4,6 @@ import static com.project.WebStore.exception.ErrorCode.DUPLICATED_EMAIL;
 import static com.project.WebStore.exception.ErrorCode.EMAIL_NOT_FOUND;
 import static com.project.WebStore.exception.ErrorCode.PASSWORD_INCORRECT;
 
-import com.project.WebStore.admin.dto.AdminDto;
 import com.project.WebStore.admin.dto.LoginAdminDto;
 import com.project.WebStore.admin.dto.RegisterAdminDto;
 import com.project.WebStore.admin.entity.AdminEntity;
@@ -35,17 +34,27 @@ public class AdminService implements UserDetailsService {
   }
 
   @Transactional
-  public AdminDto register(RegisterAdminDto.Request request) {
+  public RegisterAdminDto.Response register(RegisterAdminDto.Request request) {
     if (adminRepository.existsByEmail(request.getEmail())) {
       throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
-    AdminEntity adminEntity = AdminEntity.builder()
+    AdminEntity adminEntity = createEntity(request);
+    adminRepository.save(adminEntity);
+
+    return RegisterAdminDto.Response.builder()
+        .adminId(adminEntity.getId())
+        .email(adminEntity.getEmail())
+        .password(adminEntity.getPassword())
+        .createdAt(adminEntity.getCreatedAt())
+        .build();
+  }
+
+  private AdminEntity createEntity(RegisterAdminDto.Request request) {
+    return AdminEntity.builder()
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .build();
-
-    return AdminDto.fromEntity(adminRepository.save(adminEntity));
   }
 
   @Transactional

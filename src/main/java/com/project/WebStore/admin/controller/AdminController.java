@@ -1,6 +1,5 @@
 package com.project.WebStore.admin.controller;
 
-import com.project.WebStore.admin.dto.AdminDto;
 import com.project.WebStore.admin.dto.LoginAdminDto;
 import com.project.WebStore.admin.dto.RegisterAdminDto;
 import com.project.WebStore.admin.service.AdminService;
@@ -21,8 +20,7 @@ public class AdminController {
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody @Valid RegisterAdminDto.Request request) {
-    AdminDto adminDto = adminService.register(request);
-    return ResponseEntity.ok(RegisterAdminDto.Response.fromDto(adminDto));
+    return ResponseEntity.ok(adminService.register(request));
   }
 
   @PostMapping("/signIn")
