@@ -1,6 +1,5 @@
 package com.project.WebStore.security;
 
-import com.project.WebStore.user.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,8 +8,11 @@ import io.jsonwebtoken.security.Keys;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,21 +30,26 @@ public class JwtProvider {
     this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
   }
 
-  public String generateAccessToken(UserEntity userEntity) {
-    return createToken(userEntity, accessTokenExpTime);
+  public String generateAccessToken(UserDetails userDetails) {
+    return createToken(userDetails, accessTokenExpTime);
   }
 
-  public String generateRefreshToken(UserEntity userEntity) {
-    return createToken(userEntity, refreshTokenExpTime);
+  public String generateRefreshToken(UserDetails userDetails) {
+    return createToken(userDetails, refreshTokenExpTime);
   }
 
-  public String createToken(UserEntity userEntity, long expTime) {
+  public String createToken(UserDetails userDetails, long expTime) {
     Date now = new Date();
     Date expDate = new Date(now.getTime() + expTime);
 
+    List<String> roles = userDetails.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toList());
+
     return Jwts.builder()
-        .setSubject(userEntity.getUsername())
-        .claim("role", "ROLE_USER")
+        .setSubject(userDetails.getUsername())
+        .claim("email", userDetails.getUsername())
+        .claim("role", roles)
         .setIssuedAt(now)
         .setExpiration(expDate)
         .signWith(secretKey, SignatureAlgorithm.HS512)

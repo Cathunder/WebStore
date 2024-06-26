@@ -27,6 +27,7 @@ public class SecurityConfiguration {
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/user/register", "/user/signIn").permitAll()
+            .requestMatchers("/admin/register", "/admin/signIn").permitAll()
             .anyRequest().authenticated());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
