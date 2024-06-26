@@ -48,7 +48,7 @@ public class JwtProvider {
 
     return Jwts.builder()
         .setSubject(userDetails.getUsername())
-        .claim("role", roles)
+        .claim("roles", roles)
         .setIssuedAt(now)
         .setExpiration(expDate)
         .signWith(secretKey, SignatureAlgorithm.HS512)
@@ -83,6 +83,6 @@ public class JwtProvider {
 
   public List<String> getRoles(String token) {
     Claims claims = parseClaims(token);
-    return claims != null ? claims.get("role", List.class) : Collections.emptyList();
+    return claims != null ? claims.get("roles", List.class) : Collections.emptyList();
   }
 }
