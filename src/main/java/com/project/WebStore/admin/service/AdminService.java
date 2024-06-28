@@ -4,6 +4,7 @@ import static com.project.WebStore.exception.ErrorCode.DUPLICATED_EMAIL;
 import static com.project.WebStore.exception.ErrorCode.EMAIL_NOT_FOUND;
 import static com.project.WebStore.exception.ErrorCode.PASSWORD_INCORRECT;
 
+import com.project.WebStore.admin.dto.AdminDto;
 import com.project.WebStore.admin.dto.LoginAdminDto;
 import com.project.WebStore.admin.dto.RegisterAdminDto;
 import com.project.WebStore.admin.entity.AdminEntity;
@@ -29,8 +30,9 @@ public class AdminService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return adminRepository.findByEmail(email)
+    AdminEntity adminEntity = adminRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 이메일입니다."));
+    return AdminDto.toAdminDto(adminEntity);
   }
 
   @Transactional
@@ -67,8 +69,9 @@ public class AdminService implements UserDetailsService {
       throw new WebStoreException(PASSWORD_INCORRECT);
     }
 
-    String accessToken = jwtProvider.generateAccessToken(adminEntity);
-    String refreshToken = jwtProvider.generateRefreshToken(adminEntity);
+    AdminDto adminDto = AdminDto.toAdminDto(adminEntity);
+    String accessToken = jwtProvider.generateAccessToken(adminDto);
+    String refreshToken = jwtProvider.generateRefreshToken(adminDto);
 
     return LoginAdminDto.Response.builder()
         .adminId(adminEntity.getId())

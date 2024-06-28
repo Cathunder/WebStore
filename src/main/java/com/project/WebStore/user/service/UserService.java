@@ -30,8 +30,9 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmail(email)
+    UserEntity userEntity = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 이메일입니다."));
+    return UserDto.toUserDto(userEntity);
   }
 
   @Transactional
@@ -74,8 +75,9 @@ public class UserService implements UserDetailsService {
       throw new WebStoreException(PASSWORD_INCORRECT);
     }
 
-    String accessToken = jwtProvider.generateAccessToken(userEntity);
-    String refreshToken = jwtProvider.generateRefreshToken(userEntity);
+    UserDto userDto = UserDto.toUserDto(userEntity);
+    String accessToken = jwtProvider.generateAccessToken(userDto);
+    String refreshToken = jwtProvider.generateRefreshToken(userDto);
 
     return LoginUserDto.Response.builder()
         .userId(userEntity.getId())
