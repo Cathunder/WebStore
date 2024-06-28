@@ -1,8 +1,8 @@
 package com.project.WebStore.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class RegisterAdminDto {
   public static class Request {
 
     @NotBlank(message = "이메일을 입력하세요.")
-    @Pattern(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "이메일 형식에 맞지 않습니다.") // RFC 5322
+    @Email(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "이메일 형식에 맞지 않습니다.") // RFC 5322
     private String email;
 
     @NotBlank(message = "비밀번호를 입력하세요.")
