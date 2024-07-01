@@ -17,3 +17,8 @@ spring:
         show_sql: true
         highlight_sql: true
     defer-datasource-initialization: true
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-exp-time: ${JWT_ACCESS_TOKEN_EXPTIME}
+  refresh-token-exp-time: ${JWT_REFRESH_TOKEN_EXPTIME}
