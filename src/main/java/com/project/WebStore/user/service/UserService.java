@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
       throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
-    UserEntity userEntity = createUserEntity(request);
+    UserEntity userEntity = UserEntity.createUserEntity(request, passwordEncoder);
     userRepository.save(userEntity);
 
     return RegisterUserDto.Response.builder()
@@ -52,16 +52,6 @@ public class UserService implements UserDetailsService {
         .point(userEntity.getPoint())
         .cash(userEntity.getCash())
         .createdAt(userEntity.getCreatedAt())
-        .build();
-  }
-
-  private UserEntity createUserEntity(RegisterUserDto.Request request) {
-    return UserEntity.builder()
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .nickname(request.getNickname())
-        .point(1000)
-        .cash(0)
         .build();
   }
 

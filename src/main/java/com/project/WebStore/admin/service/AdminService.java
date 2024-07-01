@@ -41,7 +41,7 @@ public class AdminService implements UserDetailsService {
       throw new WebStoreException(DUPLICATED_EMAIL);
     }
 
-    AdminEntity adminEntity = createEntity(request);
+    AdminEntity adminEntity = AdminEntity.createEntity(request, passwordEncoder);
     adminRepository.save(adminEntity);
 
     return RegisterAdminDto.Response.builder()
@@ -49,13 +49,6 @@ public class AdminService implements UserDetailsService {
         .email(adminEntity.getEmail())
         .password(adminEntity.getPassword())
         .createdAt(adminEntity.getCreatedAt())
-        .build();
-  }
-
-  private AdminEntity createEntity(RegisterAdminDto.Request request) {
-    return AdminEntity.builder()
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
         .build();
   }
 
