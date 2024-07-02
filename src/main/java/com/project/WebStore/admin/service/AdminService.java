@@ -1,15 +1,15 @@
 package com.project.WebStore.admin.service;
 
-import static com.project.WebStore.exception.ErrorCode.DUPLICATED_EMAIL;
-import static com.project.WebStore.exception.ErrorCode.EMAIL_NOT_FOUND;
-import static com.project.WebStore.exception.ErrorCode.PASSWORD_INCORRECT;
+import static com.project.WebStore.error.ErrorCode.DUPLICATED_EMAIL;
+import static com.project.WebStore.error.ErrorCode.EMAIL_NOT_FOUND;
+import static com.project.WebStore.error.ErrorCode.PASSWORD_INCORRECT;
 
 import com.project.WebStore.admin.dto.AdminDto;
 import com.project.WebStore.admin.dto.LoginAdminDto;
 import com.project.WebStore.admin.dto.RegisterAdminDto;
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.admin.repository.AdminRepository;
-import com.project.WebStore.exception.WebStoreException;
+import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
