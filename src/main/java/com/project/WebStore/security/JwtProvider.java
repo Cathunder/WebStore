@@ -78,7 +78,7 @@ public class JwtProvider {
 
   public String getEmail(String token) {
     Claims claims = parseClaims(token);
-    return claims != null ? claims.get("email", String.class) : null;
+    return claims != null ? claims.getSubject() : null;
   }
 
   public List<String> getRoles(String token) {
