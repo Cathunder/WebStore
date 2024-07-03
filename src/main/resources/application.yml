@@ -18,6 +18,9 @@ spring:
         highlight_sql: true
     defer-datasource-initialization: true
 
+  jackson:
+    default-property-inclusion: non_empty
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-token-exp-time: ${JWT_ACCESS_TOKEN_EXPTIME}
