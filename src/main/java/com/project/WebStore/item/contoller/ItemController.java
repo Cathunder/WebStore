@@ -27,23 +27,11 @@ public class ItemController {
   public ResponseEntity<?> register(
       @RequestBody @Valid RegisterPointBoxItemDto.Request request,
       @AuthenticationPrincipal UserDetails userDetails) {
-
-    if (userDetails == null || userDetails.getAuthorities().stream()
-        .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
-      throw new WebStoreException(ACCESS_DENIED);
-    }
-
     return ResponseEntity.ok(itemService.register(request, userDetails));
   }
 
   @GetMapping("/point-box")
-  public ResponseEntity<?> findAll(@AuthenticationPrincipal UserDetails userDetails) {
-
-    if (userDetails == null || userDetails.getAuthorities().stream()
-        .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
-      throw new WebStoreException(ACCESS_DENIED);
-    }
-
+  public ResponseEntity<?> findAll() {
     return ResponseEntity.ok(itemService.findAll());
   }
 }
