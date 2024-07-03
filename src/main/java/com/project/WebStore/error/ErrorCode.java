@@ -19,6 +19,7 @@ public enum ErrorCode {
 
   // 아이템
   DUPLICATED_NAME(HttpStatus.CONFLICT, "이미 등록된 아이템명입니다."),
+  POINT_BOX_ITEM_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 포인트 박스 타입입니다.")
   ;
 
   private final HttpStatus status;
