@@ -13,7 +13,7 @@ import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.entity.FixedPointEntity;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import com.project.WebStore.item.entity.RandomPointEntity;
-import com.project.WebStore.item.repository.ItemRepository;
+import com.project.WebStore.item.repository.PointBoxItemRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ItemService {
 
-  private final ItemRepository itemRepository;
+  private final PointBoxItemRepository pointBoxItemRepository;
   private final AdminRepository adminRepository;
 
   @Transactional
@@ -37,7 +37,7 @@ public class ItemService {
     AdminEntity adminEntity = adminRepository.findByEmail(email)
         .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
 
-    if (itemRepository.existsByName(request.getName())) {
+    if (pointBoxItemRepository.existsByName(request.getName())) {
       throw new WebStoreException(DUPLICATED_NAME);
     }
 
@@ -75,6 +75,6 @@ public class ItemService {
       throw new WebStoreException(POINT_BOX_ITEM_TYPE_NOT_EXIST);
     }
 
-    itemRepository.save(pointBoxItemEntity);
+    pointBoxItemRepository.save(pointBoxItemEntity);
   }
 }

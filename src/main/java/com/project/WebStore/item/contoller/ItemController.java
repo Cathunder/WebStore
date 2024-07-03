@@ -28,7 +28,7 @@ public class ItemController {
       @AuthenticationPrincipal UserDetails userDetails) {
 
     if (userDetails == null || userDetails.getAuthorities().stream()
-        .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
+        .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
       throw new WebStoreException(ACCESS_DENIED);
     }
 
