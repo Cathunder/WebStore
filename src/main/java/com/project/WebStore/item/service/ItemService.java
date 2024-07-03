@@ -9,6 +9,7 @@ import static com.project.WebStore.error.ErrorCode.POINT_BOX_ITEM_TYPE_NOT_EXIST
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.admin.repository.AdminRepository;
 import com.project.WebStore.error.exception.WebStoreException;
+import com.project.WebStore.item.dto.PointBoxItemDto;
 import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.entity.FixedPointEntity;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
@@ -76,5 +77,12 @@ public class ItemService {
     }
 
     pointBoxItemRepository.save(pointBoxItemEntity);
+  }
+
+  public List<PointBoxItemDto> findAll() {
+    List<PointBoxItemEntity> pointBoxItemEntities = pointBoxItemRepository.findAll();
+    return pointBoxItemEntities.stream()
+        .map(PointBoxItemDto::from)
+        .toList();
   }
 }
