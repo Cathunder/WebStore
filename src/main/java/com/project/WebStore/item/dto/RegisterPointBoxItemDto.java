@@ -86,16 +86,13 @@ public class RegisterPointBoxItemDto {
     private ItemStatus status;
 
     public static Response from(PointBoxItemEntity pointBoxItemEntity) {
-      List<FixedPointDto> fixedPointDtos = FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities());
-      List<RandomPointDto> randomPointDtos = RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities());
-
       return Response.builder()
           .id(pointBoxItemEntity.getId())
           .adminId(pointBoxItemEntity.getAdminEntity().getId())
           .name(pointBoxItemEntity.getName())
           .type(pointBoxItemEntity.getType())
-          .fixedPoints(fixedPointDtos)
-          .randomPoints(randomPointDtos)
+          .fixedPoints(FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities()))
+          .randomPoints(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
           .requiredPoint(pointBoxItemEntity.getRequiredPoint())
           .stock(pointBoxItemEntity.getStock())
           .stockResetTime(pointBoxItemEntity.getStockResetTime())
