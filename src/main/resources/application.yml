@@ -20,6 +20,8 @@ spring:
 
   jackson:
     default-property-inclusion: non_empty
+    serialization:
+      write-dates-as-timestamps: false
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
