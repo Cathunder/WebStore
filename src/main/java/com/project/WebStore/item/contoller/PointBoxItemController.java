@@ -2,7 +2,7 @@ package com.project.WebStore.item.contoller;
 
 import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
-import com.project.WebStore.item.service.ItemService;
+import com.project.WebStore.item.service.PointBoxItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/item")
-public class ItemController {
+public class PointBoxItemController {
 
-  private final ItemService itemService;
+  private final PointBoxItemService pointBoxItemService;
 
   @PostMapping("/point-box")
   public ResponseEntity<?> register(
       @RequestBody @Valid RegisterPointBoxItemDto.Request request,
       @AuthenticationPrincipal UserDetails userDetails) {
-    return ResponseEntity.ok(itemService.register(request, userDetails));
+    return ResponseEntity.ok(pointBoxItemService.register(request, userDetails));
   }
 
   @GetMapping("/point-box")
   public ResponseEntity<?> findAll() {
-    return ResponseEntity.ok(itemService.findAll());
+    return ResponseEntity.ok(pointBoxItemService.findAll());
   }
 
   @PatchMapping("/point-box/{id}")
@@ -41,12 +41,12 @@ public class ItemController {
       @PathVariable("id") Long id,
       @RequestBody @Valid UpdatePointBoxItemDto.Request request,
       @AuthenticationPrincipal UserDetails userDetails) {
-    return ResponseEntity.ok(itemService.update(id, request, userDetails));
+    return ResponseEntity.ok(pointBoxItemService.update(id, request, userDetails));
   }
 
   @DeleteMapping("/point-box/{id}")
   public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-    itemService.delete(id);
+    pointBoxItemService.delete(id);
     return ResponseEntity.noContent().build();
   }
 }

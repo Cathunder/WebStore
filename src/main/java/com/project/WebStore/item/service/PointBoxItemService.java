@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ItemService {
+public class PointBoxItemService {
 
   private final PointBoxItemRepository pointBoxItemRepository;
   private final AdminRepository adminRepository;
