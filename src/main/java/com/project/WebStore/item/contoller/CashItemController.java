@@ -45,8 +45,10 @@ public class CashItemController {
   }
 
   @DeleteMapping("/cash/{id}")
-  public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-    cashItemService.delete(id);
+  public ResponseEntity<Void> delete(
+      @PathVariable("id") Long id,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    cashItemService.delete(id, userDetails);
     return ResponseEntity.noContent().build();
   }
 }

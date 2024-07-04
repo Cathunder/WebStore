@@ -58,8 +58,10 @@ public class CashItemService {
   }
 
   @Transactional
-  public void delete(Long id) {
+  public void delete(Long id, UserDetails userDetails) {
+    AdminEntity adminEntity = checkEmail(userDetails);
     CashItemEntity cashItemEntity = checkItem(id);
+    checkSameAdmin(adminEntity, cashItemEntity);
     cashItemEntity.changeStatus();
   }
 

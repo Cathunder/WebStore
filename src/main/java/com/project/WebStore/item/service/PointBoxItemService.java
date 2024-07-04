@@ -64,8 +64,10 @@ public class PointBoxItemService {
   }
 
   @Transactional
-  public void delete(Long id) {
+  public void delete(Long id, UserDetails userDetails) {
+    AdminEntity adminEntity = checkEmail(userDetails);
     PointBoxItemEntity pointBoxItemEntity = checkItem(id);
+    checkSameAdmin(adminEntity, pointBoxItemEntity);
     pointBoxItemEntity.changeStatus();
   }
 

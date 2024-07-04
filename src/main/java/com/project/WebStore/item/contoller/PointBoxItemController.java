@@ -45,8 +45,10 @@ public class PointBoxItemController {
   }
 
   @DeleteMapping("/point-box/{id}")
-  public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-    pointBoxItemService.delete(id);
+  public ResponseEntity<Void> delete(
+      @PathVariable("id") Long id,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    pointBoxItemService.delete(id, userDetails);
     return ResponseEntity.noContent().build();
   }
 }
