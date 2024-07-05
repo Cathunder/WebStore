@@ -68,7 +68,7 @@ public class PointBoxItemService {
     AdminEntity adminEntity = getAdmin(userDetails);
     PointBoxItemEntity pointBoxItemEntity = getItem(id);
     checkSameAdmin(adminEntity, pointBoxItemEntity);
-    pointBoxItemEntity.changeStatus();
+    pointBoxItemEntity.changeStatusToInactive();
   }
 
   private AdminEntity getAdmin(UserDetails userDetails) {

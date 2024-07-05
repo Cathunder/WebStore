@@ -53,7 +53,7 @@ public class CashItemEntity extends BaseEntity {
     this.dailyLimitCount = request.getDailyLimitCount();
   }
 
-  public void changeStatus() {
+  public void changeStatusToInactive() {
     this.status = ItemStatus.INACTIVE;
   }
 }

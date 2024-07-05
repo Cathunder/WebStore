@@ -62,7 +62,7 @@ public class CashItemService {
     AdminEntity adminEntity = getAdmin(userDetails);
     CashItemEntity cashItemEntity = getItem(id);
     checkSameAdmin(adminEntity, cashItemEntity);
-    cashItemEntity.changeStatus();
+    cashItemEntity.changeStatusToInactive();
   }
 
   private AdminEntity getAdmin(UserDetails userDetails) {
