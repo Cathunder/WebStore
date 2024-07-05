@@ -1,12 +1,10 @@
 package com.project.WebStore.item.dto;
 
-import com.project.WebStore.common.validation.ValidEndedAt;
-import com.project.WebStore.common.validation.ValidItemType;
 import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.validation.ValidItemType;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,8 +24,7 @@ public class RegisterPointBoxItemDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  @ValidEndedAt
-  public static class Request {
+  public static class Request extends SalePeriod {
 
     @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
@@ -57,13 +54,6 @@ public class RegisterPointBoxItemDto {
     @NotNull(message = "일일 구매 제한 개수를 입력하세요.")
     @Min(value = 1, message = "일일 구매 제한 개수는 1 이상이어야 합니다.")
     private int dailyLimitCount;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @Future(message = "판매 시작일은 현재 시간 이후여야 합니다.")
-    private LocalDateTime startedAt;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime endedAt;
   }
 
   @Getter

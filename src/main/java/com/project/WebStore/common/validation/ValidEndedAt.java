@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {RegisterEndedAtValidator.class, UpdateEndedAtValidator.class})
+@Constraint(validatedBy = {EndedAtValidator.class})
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEndedAt {

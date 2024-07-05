@@ -1,15 +1,15 @@
 package com.project.WebStore.common.validation;
 
-import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
+import com.project.WebStore.item.dto.SalePeriod;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class UpdateEndedAtValidator implements ConstraintValidator<ValidEndedAt, UpdatePointBoxItemDto.Request> {
+public class EndedAtValidator implements ConstraintValidator<ValidEndedAt, SalePeriod> {
 
   @Override
-  public boolean isValid(UpdatePointBoxItemDto.Request request, ConstraintValidatorContext context) {
-    if (request.getEndedAt().isBefore(request.getStartedAt())
-        || request.getEndedAt().isEqual(request.getStartedAt())) {
+  public boolean isValid(SalePeriod salePeriod, ConstraintValidatorContext context) {
+    if (salePeriod.getEndedAt().isBefore(salePeriod.getStartedAt())
+        || salePeriod.getEndedAt().isEqual(salePeriod.getStartedAt())) {
       context.disableDefaultConstraintViolation();
       context.buildConstraintViolationWithTemplate("종료일은 시작일 이후여야 합니다.")
           .addPropertyNode("endedAt")

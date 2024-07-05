@@ -2,10 +2,8 @@ package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.PointBoxItemType;
-import com.project.WebStore.common.validation.ValidEndedAt;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,8 +21,7 @@ public class UpdatePointBoxItemDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  @ValidEndedAt
-  public static class Request {
+  public static class Request extends SalePeriod {
 
     private String name;
 
@@ -45,13 +42,6 @@ public class UpdatePointBoxItemDto {
 
     @Min(value = 1, message = "일일 구매 제한 개수는 1 이상이어야 합니다.")
     private int dailyLimitCount;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @Future(message = "판매 시작일은 현재 시간 이후여야 합니다.")
-    private LocalDateTime startedAt;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime endedAt;
   }
 
   @Getter
