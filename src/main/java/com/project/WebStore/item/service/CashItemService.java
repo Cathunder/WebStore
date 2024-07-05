@@ -13,8 +13,9 @@ import com.project.WebStore.item.dto.RegisterCashItemDto;
 import com.project.WebStore.item.dto.UpdateCashItemDto;
 import com.project.WebStore.item.entity.CashItemEntity;
 import com.project.WebStore.item.repository.CashItemRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +39,9 @@ public class CashItemService {
     return RegisterCashItemDto.Response.from(cashItemEntity);
   }
 
-  public List<CashItemDto> findAll() {
-    List<CashItemEntity> cashItemEntities = cashItemRepository.findAll();
-    return cashItemEntities.stream()
-        .map(CashItemDto::from)
-        .toList();
+  public Page<CashItemDto> findAll(Pageable pageable) {
+    Page<CashItemEntity> page = cashItemRepository.findAll(pageable);
+    return page.map(CashItemDto::from);
   }
 
   @Transactional

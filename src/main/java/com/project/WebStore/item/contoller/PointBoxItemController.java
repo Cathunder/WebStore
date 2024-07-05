@@ -5,6 +5,7 @@ import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
 import com.project.WebStore.item.service.PointBoxItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,8 +33,8 @@ public class PointBoxItemController {
   }
 
   @GetMapping("/point-box")
-  public ResponseEntity<?> findAll() {
-    return ResponseEntity.ok(pointBoxItemService.findAll());
+  public ResponseEntity<?> findAll(Pageable pageable) {
+    return ResponseEntity.ok(pointBoxItemService.findAll(pageable));
   }
 
   @PatchMapping("/point-box/{id}")

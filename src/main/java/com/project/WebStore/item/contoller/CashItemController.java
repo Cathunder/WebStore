@@ -5,6 +5,7 @@ import com.project.WebStore.item.dto.UpdateCashItemDto;
 import com.project.WebStore.item.service.CashItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,8 +33,8 @@ public class CashItemController {
   }
 
   @GetMapping("/cash")
-  public ResponseEntity<?> findAll() {
-    return ResponseEntity.ok(cashItemService.findAll());
+  public ResponseEntity<?> findAll(Pageable pageable) {
+    return ResponseEntity.ok(cashItemService.findAll(pageable));
   }
 
   @PatchMapping("/cash/{id}")

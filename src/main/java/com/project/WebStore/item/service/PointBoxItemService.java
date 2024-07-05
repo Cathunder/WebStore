@@ -15,9 +15,10 @@ import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import com.project.WebStore.item.repository.PointBoxItemRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +43,9 @@ public class PointBoxItemService {
     return RegisterPointBoxItemDto.Response.from(pointBoxItemEntity);
   }
 
-  public List<PointBoxItemDto> findAll() {
-    List<PointBoxItemEntity> pointBoxItemEntities = pointBoxItemRepository.findAll();
-    return pointBoxItemEntities.stream()
-        .map(PointBoxItemDto::from)
-        .toList();
+  public Page<PointBoxItemDto> findAll(Pageable pageable) {
+    Page<PointBoxItemEntity> page = pointBoxItemRepository.findAll(pageable);
+    return page.map(PointBoxItemDto::from);
   }
 
   @Transactional
