@@ -1,10 +1,10 @@
 package com.project.WebStore.user.service;
 
-import static com.project.WebStore.exception.ErrorCode.DUPLICATED_EMAIL;
-import static com.project.WebStore.exception.ErrorCode.EMAIL_NOT_FOUND;
-import static com.project.WebStore.exception.ErrorCode.PASSWORD_INCORRECT;
+import static com.project.WebStore.error.ErrorCode.DUPLICATED_EMAIL;
+import static com.project.WebStore.error.ErrorCode.EMAIL_NOT_FOUND;
+import static com.project.WebStore.error.ErrorCode.PASSWORD_INCORRECT;
 
-import com.project.WebStore.exception.WebStoreException;
+import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.security.JwtProvider;
 import com.project.WebStore.user.dto.LoginUserDto;
 import com.project.WebStore.user.dto.RegisterUserDto;

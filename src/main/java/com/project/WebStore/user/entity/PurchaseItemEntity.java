@@ -1,7 +1,7 @@
 package com.project.WebStore.user.entity;
 
 import com.project.WebStore.common.entity.BaseEntity;
-import com.project.WebStore.common.type.ItemType;
+import com.project.WebStore.common.type.PointBoxItemType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,7 +22,7 @@ public class PurchaseItemEntity extends BaseEntity {
   private Long itemId;
 
   @Enumerated(EnumType.STRING)
-  private ItemType itemType;
+  private PointBoxItemType pointBoxItemType;
 
   private int quantity;
 

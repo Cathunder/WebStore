@@ -1,7 +1,6 @@
 package com.project.WebStore.common.type;
 
-public enum ItemType {
+public enum PointBoxItemType {
   FIXED_POINT_BOX_ITEM,
   RANDOM_POINT_BOX_ITEM,
-  CASH_ITEM,
 }
