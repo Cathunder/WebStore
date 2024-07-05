@@ -29,7 +29,7 @@ public class CashItemService {
 
   @Transactional
   public RegisterCashItemDto.Response register(RegisterCashItemDto.Request request, UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
+    AdminEntity adminEntity = getAdmin(userDetails);
     checkItemName(request);
 
     CashItemEntity cashItemEntity = CashItemEntity.create(request, adminEntity);
@@ -47,8 +47,8 @@ public class CashItemService {
 
   @Transactional
   public UpdateCashItemDto.Response update(Long id, UpdateCashItemDto.Request request, UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
-    CashItemEntity cashItemEntity = checkItem(id);
+    AdminEntity adminEntity = getAdmin(userDetails);
+    CashItemEntity cashItemEntity = getItem(id);
     checkSameAdmin(adminEntity, cashItemEntity);
 
     cashItemEntity.updateEntity(request);
@@ -59,13 +59,13 @@ public class CashItemService {
 
   @Transactional
   public void delete(Long id, UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
-    CashItemEntity cashItemEntity = checkItem(id);
+    AdminEntity adminEntity = getAdmin(userDetails);
+    CashItemEntity cashItemEntity = getItem(id);
     checkSameAdmin(adminEntity, cashItemEntity);
     cashItemEntity.changeStatus();
   }
 
-  private AdminEntity checkEmail(UserDetails userDetails) {
+  private AdminEntity getAdmin(UserDetails userDetails) {
     String email = userDetails.getUsername();
     return adminRepository.findByEmail(email)
         .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
@@ -77,7 +77,7 @@ public class CashItemService {
     }
   }
 
-  private CashItemEntity checkItem(Long id) {
+  private CashItemEntity getItem(Long id) {
     return cashItemRepository.findById(id)
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
   }

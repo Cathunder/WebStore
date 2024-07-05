@@ -33,7 +33,7 @@ public class PointBoxItemService {
 
   @Transactional
   public RegisterPointBoxItemDto.Response register(RegisterPointBoxItemDto.Request request, UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
+    AdminEntity adminEntity = getAdmin(userDetails);
     checkItemName(request);
 
     PointBoxItemEntity pointBoxItemEntity = PointBoxItemEntity.create(request, adminEntity);
@@ -52,8 +52,8 @@ public class PointBoxItemService {
   @Transactional
   public UpdatePointBoxItemDto.Response update(Long id, UpdatePointBoxItemDto.Request request,
       UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
-    PointBoxItemEntity pointBoxItemEntity = checkItem(id);
+    AdminEntity adminEntity = getAdmin(userDetails);
+    PointBoxItemEntity pointBoxItemEntity = getItem(id);
     checkSameAdmin(adminEntity, pointBoxItemEntity);
     checkStartedAtBeforeNow(pointBoxItemEntity);
 
@@ -65,13 +65,13 @@ public class PointBoxItemService {
 
   @Transactional
   public void delete(Long id, UserDetails userDetails) {
-    AdminEntity adminEntity = checkEmail(userDetails);
-    PointBoxItemEntity pointBoxItemEntity = checkItem(id);
+    AdminEntity adminEntity = getAdmin(userDetails);
+    PointBoxItemEntity pointBoxItemEntity = getItem(id);
     checkSameAdmin(adminEntity, pointBoxItemEntity);
     pointBoxItemEntity.changeStatus();
   }
 
-  private AdminEntity checkEmail(UserDetails userDetails) {
+  private AdminEntity getAdmin(UserDetails userDetails) {
     String email = userDetails.getUsername();
     return adminRepository.findByEmail(email)
         .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
@@ -83,7 +83,7 @@ public class PointBoxItemService {
     }
   }
 
-  private PointBoxItemEntity checkItem(Long id) {
+  private PointBoxItemEntity getItem(Long id) {
     return pointBoxItemRepository.findById(id)
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
   }
