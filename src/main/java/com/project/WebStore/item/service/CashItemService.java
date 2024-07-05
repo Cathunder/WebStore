@@ -31,7 +31,7 @@ public class CashItemService {
   @Transactional
   public RegisterCashItemDto.Response register(RegisterCashItemDto.Request request, UserDetails userDetails) {
     AdminEntity adminEntity = getAdmin(userDetails);
-    checkItemName(request);
+    checkSameItemName(request.getName(), null);
 
     CashItemEntity cashItemEntity = CashItemEntity.create(request, adminEntity);
     cashItemRepository.save(cashItemEntity);
@@ -49,6 +49,7 @@ public class CashItemService {
     AdminEntity adminEntity = getAdmin(userDetails);
     CashItemEntity cashItemEntity = getItem(id);
     checkSameAdmin(adminEntity, cashItemEntity);
+    checkSameItemName(request.getName(), id);
 
     cashItemEntity.updateEntity(request);
     cashItemRepository.save(cashItemEntity);
@@ -70,8 +71,10 @@ public class CashItemService {
         .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
   }
 
-  private void checkItemName(RegisterCashItemDto.Request request) {
-    if (cashItemRepository.existsByName(request.getName())) {
+  private void checkSameItemName(String name, Long id) {
+    CashItemEntity cashItemEntity = cashItemRepository.findByName(name).orElse(null);
+
+    if (cashItemEntity != null && !cashItemEntity.getId().equals(id)) {
       throw new WebStoreException(DUPLICATED_NAME);
     }
   }

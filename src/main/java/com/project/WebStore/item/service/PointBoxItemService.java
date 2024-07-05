@@ -35,7 +35,7 @@ public class PointBoxItemService {
   @Transactional
   public RegisterPointBoxItemDto.Response register(RegisterPointBoxItemDto.Request request, UserDetails userDetails) {
     AdminEntity adminEntity = getAdmin(userDetails);
-    checkItemName(request);
+    checkSameItemName(request.getName(), null);
 
     PointBoxItemEntity pointBoxItemEntity = PointBoxItemEntity.create(request, adminEntity);
     pointBoxItemRepository.save(pointBoxItemEntity);
@@ -49,11 +49,11 @@ public class PointBoxItemService {
   }
 
   @Transactional
-  public UpdatePointBoxItemDto.Response update(Long id, UpdatePointBoxItemDto.Request request,
-      UserDetails userDetails) {
+  public UpdatePointBoxItemDto.Response update(Long id, UpdatePointBoxItemDto.Request request, UserDetails userDetails) {
     AdminEntity adminEntity = getAdmin(userDetails);
     PointBoxItemEntity pointBoxItemEntity = getItem(id);
     checkSameAdmin(adminEntity, pointBoxItemEntity);
+    checkSameItemName(request.getName(), id);
     checkStartedAtBeforeNow(pointBoxItemEntity);
 
     pointBoxItemEntity.updateEntity(request);
@@ -76,8 +76,10 @@ public class PointBoxItemService {
         .orElseThrow(() -> new WebStoreException(EMAIL_NOT_FOUND));
   }
 
-  private void checkItemName(RegisterPointBoxItemDto.Request request) {
-    if (pointBoxItemRepository.existsByName(request.getName())) {
+  private void checkSameItemName(String name, Long id) {
+    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findByName(name).orElse(null);
+
+    if (pointBoxItemEntity != null && !pointBoxItemEntity.getId().equals(id)) {
       throw new WebStoreException(DUPLICATED_NAME);
     }
   }

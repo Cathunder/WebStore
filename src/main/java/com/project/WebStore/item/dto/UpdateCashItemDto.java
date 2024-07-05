@@ -3,6 +3,7 @@ package com.project.WebStore.item.dto;
 import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.item.entity.CashItemEntity;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class UpdateCashItemDto {
   @Builder
   public static class Request {
 
+    @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
 
     @Min(value = 0, message = "구매시 필요한 포인트는 0 이상이어야 합니다.")

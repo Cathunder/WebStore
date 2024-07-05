@@ -5,6 +5,7 @@ import com.project.WebStore.common.type.PointBoxItemType;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class UpdatePointBoxItemDto {
   @Builder
   public static class Request extends SalePeriod {
 
+    @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
 
     @Valid
