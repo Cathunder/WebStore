@@ -23,13 +23,13 @@ public class UpdatePointBoxItemDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
+  @ValidProbabilitySum
   public static class Request extends SalePeriod {
 
     @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
 
     @Valid
-    @ValidProbabilitySum
     private List<FixedPointDto> fixedPoints;
 
     @Valid

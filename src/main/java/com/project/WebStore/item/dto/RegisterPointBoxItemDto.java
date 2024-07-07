@@ -25,6 +25,7 @@ public class RegisterPointBoxItemDto {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
+  @ValidProbabilitySum
   public static class Request extends SalePeriod {
 
     @NotBlank(message = "아이템명을 입력하세요.")
@@ -35,7 +36,6 @@ public class RegisterPointBoxItemDto {
     private PointBoxItemType type;
 
     @Valid
-    @ValidProbabilitySum
     private List<FixedPointDto> fixedPoints;
 
     @Valid
