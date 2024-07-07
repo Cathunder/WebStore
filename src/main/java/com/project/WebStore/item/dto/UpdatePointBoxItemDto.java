@@ -2,6 +2,7 @@ package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.validation.ValidProbabilitySum;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -28,6 +29,7 @@ public class UpdatePointBoxItemDto {
     private String name;
 
     @Valid
+    @ValidProbabilitySum
     private List<FixedPointDto> fixedPoints;
 
     @Valid
