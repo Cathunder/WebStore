@@ -1,7 +1,7 @@
 package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,7 +21,7 @@ public class PointBoxItemDto {
   private Long id;
   private Long adminId;
   private String name;
-  private PointBoxItemType type;
+  private ItemType type;
   private List<FixedPointDto> fixedPointDtos = new ArrayList<>();
   private List<RandomPointDto> randomPointDtos = new ArrayList<>();
   private int requiredPoint;

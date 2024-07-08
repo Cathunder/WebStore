@@ -1,7 +1,7 @@
 package com.project.WebStore.user.dto;
 
-import static com.project.WebStore.common.type.PointBoxItemType.FIXED_POINT_BOX_ITEM;
-import static com.project.WebStore.common.type.PointBoxItemType.RANDOM_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 
 import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RandomPointDto;

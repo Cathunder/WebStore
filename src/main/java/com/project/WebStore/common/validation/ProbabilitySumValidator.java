@@ -1,8 +1,8 @@
 package com.project.WebStore.common.validation;
 
-import static com.project.WebStore.common.type.PointBoxItemType.*;
+import static com.project.WebStore.common.type.ItemType.*;
 
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
@@ -17,7 +17,7 @@ public class ProbabilitySumValidator implements ConstraintValidator<ValidProbabi
   @Override
   public boolean isValid(Object value, ConstraintValidatorContext context) {
     List<FixedPointDto> fixedPointDtos = null;
-    PointBoxItemType type = null;
+    ItemType type = null;
 
     if (value instanceof RegisterPointBoxItemDto.Request request) {
       fixedPointDtos = request.getFixedPoints();

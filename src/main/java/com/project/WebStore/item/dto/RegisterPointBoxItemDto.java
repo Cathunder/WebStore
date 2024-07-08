@@ -1,7 +1,7 @@
 package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.common.validation.ValidItemType;
 import com.project.WebStore.common.validation.ValidProbabilitySum;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
@@ -33,7 +33,7 @@ public class RegisterPointBoxItemDto {
 
     @NotNull(message = "박스형을 입력하세요.")
     @ValidItemType
-    private PointBoxItemType type;
+    private ItemType type;
 
     @Valid
     private List<FixedPointDto> fixedPoints;
@@ -66,7 +66,7 @@ public class RegisterPointBoxItemDto {
     private Long id;
     private Long adminId;
     private String name;
-    private PointBoxItemType type;
+    private ItemType type;
     private List<FixedPointDto> fixedPoints;
     private List<RandomPointDto> randomPoints;
     private int requiredPoint;

@@ -1,7 +1,7 @@
 package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.common.validation.ValidProbabilitySum;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
@@ -56,7 +56,7 @@ public class UpdatePointBoxItemDto {
     private Long id;
     private Long adminId;
     private String name;
-    private PointBoxItemType type;
+    private ItemType type;
     private List<FixedPointDto> fixedPoints;
     private List<RandomPointDto> randomPoints;
     private int requiredPoint;

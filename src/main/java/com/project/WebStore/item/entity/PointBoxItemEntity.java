@@ -2,12 +2,14 @@ package com.project.WebStore.item.entity;
 
 import static com.project.WebStore.common.type.PointBoxItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.PointBoxItemType.RANDOM_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.common.entity.BaseEntity;
 import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RandomPointDto;
@@ -47,7 +49,7 @@ public class PointBoxItemEntity extends BaseEntity {
   private String name;
 
   @Enumerated(EnumType.STRING)
-  private PointBoxItemType type;
+  private ItemType type;
 
   @OneToMany(mappedBy = "pointBoxItemEntity", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FixedPointEntity> fixedPointEntities = new ArrayList<>();
