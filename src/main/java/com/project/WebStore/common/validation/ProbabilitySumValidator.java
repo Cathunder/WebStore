@@ -16,7 +16,7 @@ public class ProbabilitySumValidator implements ConstraintValidator<ValidProbabi
 
   @Override
   public boolean isValid(Object value, ConstraintValidatorContext context) {
-    List<FixedPointDto> fixedPointDtos = null;
+    List<FixedPointDto> fixedPointDtos;
     ItemType type = null;
 
     if (value instanceof RegisterPointBoxItemDto.Request request) {

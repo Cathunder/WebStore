@@ -52,13 +52,7 @@ public class ItemDetailsDto {
     public static Response from(PointBoxItemEntity pointBoxItemEntity) {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
 
-      ResponseBuilder responseBuilder = Response.builder()
-          .name(pointBoxItemEntity.getName())
-          .requiredPoint(pointBoxItemEntity.getRequiredPoint())
-          .stock(pointBoxItemEntity.getStock())
-          .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount())
-          .startedAt(pointBoxItemEntity.getStartedAt().format(formatter))
-          .endedAt(pointBoxItemEntity.getEndedAt().format(formatter));
+      ResponseBuilder responseBuilder = getResponseBuilder(pointBoxItemEntity, formatter);
 
       if (pointBoxItemEntity.getType() == FIXED_POINT_BOX_ITEM) {
         responseBuilder.fixedPointsAmount(getFixedPointsAmount(pointBoxItemEntity));
@@ -67,6 +61,19 @@ public class ItemDetailsDto {
       }
 
       return responseBuilder.build();
+    }
+
+    private static ResponseBuilder getResponseBuilder(
+        PointBoxItemEntity pointBoxItemEntity,
+        DateTimeFormatter formatter
+    ) {
+      return Response.builder()
+          .name(pointBoxItemEntity.getName())
+          .requiredPoint(pointBoxItemEntity.getRequiredPoint())
+          .stock(pointBoxItemEntity.getStock())
+          .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount())
+          .startedAt(pointBoxItemEntity.getStartedAt().format(formatter))
+          .endedAt(pointBoxItemEntity.getEndedAt().format(formatter));
     }
 
     private static List<Integer> getFixedPointsAmount(PointBoxItemEntity pointBoxItemEntity) {
