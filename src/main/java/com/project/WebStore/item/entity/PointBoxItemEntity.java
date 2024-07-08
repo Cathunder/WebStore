@@ -1,7 +1,5 @@
 package com.project.WebStore.item.entity;
 
-import static com.project.WebStore.common.type.PointBoxItemType.FIXED_POINT_BOX_ITEM;
-import static com.project.WebStore.common.type.PointBoxItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;

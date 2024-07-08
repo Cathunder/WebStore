@@ -28,6 +28,7 @@ public class SearchService {
   private final PointBoxItemRepository pointBoxItemRepository;
   private final CashItemRepository cashItemRepository;
 
+  // findAll
   public Page<Object> findAll(Pageable pageable) {
     List<ItemDto> pointBoxItemDtos = getPointBoxItemDtos(pageable);
     List<ItemDto> cashItemDtos = getCashItemDtos(pageable);
@@ -39,14 +40,6 @@ public class SearchService {
 
     return new PageImpl<>(contents, pageable, itemDtos.size());
   }
-
-  public ItemDetailsDto findOne(Long id) {
-    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findById(id)
-        .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
-
-    return ItemDetailsDto.from(pointBoxItemEntity);
-  }
-
 
   private List<ItemDto> getPointBoxItemDtos(Pageable pageable) {
     Page<PointBoxItemEntity> pointBoxItemEntitiesPage = pointBoxItemRepository.findAll(pageable);
@@ -68,5 +61,35 @@ public class SearchService {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), itemDtos.size());
     return itemDtos.subList(start, end);
+  }
+
+  // findOne
+  public ItemDetailsDto.Response findOne(ItemDetailsDto.Request request) {
+    switch (request.getType()) {
+      case FIXED_POINT_BOX_ITEM:
+      case RANDOM_POINT_BOX_ITEM:
+        return ItemDetailsDto.Response.from(getPointBoxItemEntity(request));
+      case CASH_ITEM:
+        return ItemDetailsDto.Response.from(getCashItemEntity(request));
+      default:
+        throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  private PointBoxItemEntity getPointBoxItemEntity(ItemDetailsDto.Request request) {
+    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findById(request.getItemId())
+        .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
+
+    if (pointBoxItemEntity.getStatus() == ACTIVE
+        && pointBoxItemEntity.getType() == request.getType()) {
+      return pointBoxItemEntity;
+    } else {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  private CashItemEntity getCashItemEntity(ItemDetailsDto.Request request) {
+    return cashItemRepository.findById(request.getItemId())
+        .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
   }
 }
