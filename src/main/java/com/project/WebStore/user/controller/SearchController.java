@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/user/items")
 public class SearchController {
 
   private final SearchService searchService;
 
-  @GetMapping("/items")
+  @GetMapping("")
   public ResponseEntity<?> findAll(Pageable pageable) {
     return ResponseEntity.ok(searchService.findAll(pageable));
   }
 
-  @GetMapping("/items/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<?> findOne(@PathVariable("id") Long id) {
     return ResponseEntity.ok(searchService.findOne(id));
   }
