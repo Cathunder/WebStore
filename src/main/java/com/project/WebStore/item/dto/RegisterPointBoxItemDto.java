@@ -2,7 +2,7 @@ package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.ItemType;
-import com.project.WebStore.common.validation.ValidItemType;
+import com.project.WebStore.common.validation.ValidPointBoxItemType;
 import com.project.WebStore.common.validation.ValidProbabilitySum;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class RegisterPointBoxItemDto {
     private String name;
 
     @NotNull(message = "박스형을 입력하세요.")
-    @ValidItemType
+    @ValidPointBoxItemType
     private ItemType type;
 
     @Valid
