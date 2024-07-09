@@ -28,7 +28,8 @@ public class SecurityConfiguration {
         .sessionManagement(sessionManagement ->
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/register", "/user/signIn", "/user/items/**").permitAll()
+            .requestMatchers("/user/register", "/user/signIn", "/user/items", "/user/items/details/**").permitAll()
+//            .requestMatchers("/user/items/purchase/**").hasRole("USER")
             .requestMatchers("/admin/register", "/admin/signIn").permitAll()
             .requestMatchers("/admin/item/**").hasRole("ADMIN")
             .anyRequest().authenticated())

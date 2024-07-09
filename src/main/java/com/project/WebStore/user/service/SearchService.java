@@ -10,6 +10,7 @@ import com.project.WebStore.item.repository.CashItemRepository;
 import com.project.WebStore.item.repository.PointBoxItemRepository;
 import com.project.WebStore.user.dto.ItemDetailsDto;
 import com.project.WebStore.user.dto.ItemDto;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,7 +45,8 @@ public class SearchService {
   private List<ItemDto> getPointBoxItemDtos(Pageable pageable) {
     Page<PointBoxItemEntity> pointBoxItemEntitiesPage = pointBoxItemRepository.findAll(pageable);
     return pointBoxItemEntitiesPage.stream()
-        .filter(pointBoxItemEntity -> pointBoxItemEntity.getStatus() == ACTIVE)
+        .filter(pointBoxItemEntity -> pointBoxItemEntity.getStatus() == ACTIVE
+            && pointBoxItemEntity.getStartedAt().isBefore(LocalDateTime.now()))
         .map(ItemDto::from)
         .toList();
   }
