@@ -4,7 +4,7 @@ import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 
 import com.project.WebStore.common.type.ItemType;
-//import com.project.WebStore.common.validation.ValidItemType;
+import com.project.WebStore.common.validation.ValidItemType;
 import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RandomPointDto;
 import com.project.WebStore.item.entity.CashItemEntity;
@@ -25,12 +25,8 @@ public class ItemDetailsDto {
   @AllArgsConstructor
   @Builder
   public static class Request {
-
-    @NotNull(message = "아이템 id를 입력하세요.")
-    private Long itemId;
-
     @NotNull(message = "아이템형을 입력하세요.")
-//    @ValidItemType
+    @ValidItemType
     private ItemType type;
   }
 

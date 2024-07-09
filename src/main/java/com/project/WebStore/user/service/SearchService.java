@@ -64,20 +64,20 @@ public class SearchService {
   }
 
   // findOne
-  public ItemDetailsDto.Response findOne(ItemDetailsDto.Request request) {
+  public ItemDetailsDto.Response findOne(Long itemId, ItemDetailsDto.Request request) {
     switch (request.getType()) {
       case FIXED_POINT_BOX_ITEM:
       case RANDOM_POINT_BOX_ITEM:
-        return ItemDetailsDto.Response.from(getPointBoxItemEntity(request));
+        return ItemDetailsDto.Response.from(getPointBoxItemEntity(itemId, request));
       case CASH_ITEM:
-        return ItemDetailsDto.Response.from(getCashItemEntity(request));
+        return ItemDetailsDto.Response.from(getCashItemEntity(itemId));
       default:
         throw new WebStoreException(ITEM_NOT_FOUND);
     }
   }
 
-  private PointBoxItemEntity getPointBoxItemEntity(ItemDetailsDto.Request request) {
-    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findById(request.getItemId())
+  private PointBoxItemEntity getPointBoxItemEntity(Long itemId, ItemDetailsDto.Request request) {
+    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findById(itemId)
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
 
     if (pointBoxItemEntity.getStatus() == ACTIVE
@@ -88,8 +88,14 @@ public class SearchService {
     }
   }
 
-  private CashItemEntity getCashItemEntity(ItemDetailsDto.Request request) {
-    return cashItemRepository.findById(request.getItemId())
+  private CashItemEntity getCashItemEntity(Long itemId) {
+    CashItemEntity cashItemEntity = cashItemRepository.findById(itemId)
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
+
+    if (cashItemEntity.getStatus() == ACTIVE) {
+      return cashItemEntity;
+    } else {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
   }
 }
