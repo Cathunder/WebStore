@@ -83,7 +83,8 @@ public class SearchService {
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
 
     if (pointBoxItemEntity.getStatus() == ACTIVE
-        && pointBoxItemEntity.getType() == request.getType()) {
+        && pointBoxItemEntity.getType() == request.getType()
+        && pointBoxItemEntity.getStartedAt().isBefore(LocalDateTime.now())) {
       return pointBoxItemEntity;
     } else {
       throw new WebStoreException(ITEM_NOT_FOUND);

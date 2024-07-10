@@ -26,10 +26,11 @@ public enum ErrorCode {
   ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아이템입니다."),
   SELLING_ITEM_CANNOT_UPDATE(HttpStatus.CONFLICT, "판매중인 상품은 수정할 수 없습니다."),
   ITEM_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "잘못된 타입입니다."),
-  SOLD_OUT(HttpStatus.BAD_REQUEST, "품절된 상품입니다."), // 상태코드변경필요
-  INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "재고가 구매하려는 양보다 부족합니다."), // 상태코드변경필요
-  SALE_PERIOD_ENDED(HttpStatus.BAD_REQUEST, "판매 종료된 상품입니다."), // 상태코드변경필요
-  NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."), // 상태코드변경필요
+  SOLD_OUT(HttpStatus.CONFLICT, "품절된 상품입니다."),
+  INSUFFICIENT_STOCK(HttpStatus.CONFLICT, "재고가 구매하려는 양보다 부족합니다."),
+  SALE_PERIOD_ENDED(HttpStatus.CONFLICT, "판매 종료된 상품입니다."),
+  NOT_ENOUGH_POINT(HttpStatus.CONFLICT, "포인트가 부족합니다."),
+  DAILY_LIMIT_REACHED(HttpStatus.CONFLICT, "일일 구매 제한 개수에 도달했습니다."),
 
   // 히스토리
   HISTORY_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 히스토리 타입입니다."),
