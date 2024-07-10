@@ -5,6 +5,7 @@ import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.common.validation.ValidPointBoxItemType;
 import com.project.WebStore.common.validation.ValidProbabilitySum;
+import com.project.WebStore.common.validation.ValidItemTypeAndPoints;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -26,7 +27,8 @@ public class RegisterPointBoxItemDto {
   @AllArgsConstructor
   @Builder
   @ValidProbabilitySum
-  public static class Request extends SalePeriod {
+  @ValidItemTypeAndPoints
+  public static class Request extends SalePeriod implements PointBoxItemRequest {
 
     @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
@@ -36,10 +38,10 @@ public class RegisterPointBoxItemDto {
     private ItemType type;
 
     @Valid
-    private List<FixedPointDto> fixedPoints;
+    private List<FixedPointDto> fixedPointDtos;
 
     @Valid
-    private List<RandomPointDto> randomPoints;
+    private List<RandomPointDto> randomPointDtos;
 
     @NotNull(message = "구매시 필요한 포인트를 입력하세요.")
     @Min(value = 0, message = "구매시 필요한 포인트는 0 이상이어야 합니다.")
@@ -68,8 +70,8 @@ public class RegisterPointBoxItemDto {
     private Long adminId;
     private String name;
     private ItemType type;
-    private List<FixedPointDto> fixedPoints;
-    private List<RandomPointDto> randomPoints;
+    private List<FixedPointDto> fixedPointDtos;
+    private List<RandomPointDto> randomPointDtos;
     private int requiredPoint;
     private int stock;
     private String stockResetTime;
@@ -84,8 +86,8 @@ public class RegisterPointBoxItemDto {
           .adminId(pointBoxItemEntity.getAdminEntity().getId())
           .name(pointBoxItemEntity.getName())
           .type(pointBoxItemEntity.getType())
-          .fixedPoints(FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities()))
-          .randomPoints(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
+          .fixedPointDtos(FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities()))
+          .randomPointDtos(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
           .requiredPoint(pointBoxItemEntity.getRequiredPoint())
           .stock(pointBoxItemEntity.getStock())
           .stockResetTime(pointBoxItemEntity.getStockResetTime().format(DateTimeFormatter.ofPattern("HH시")))
