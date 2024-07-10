@@ -85,9 +85,9 @@ public class PointBoxItemEntity extends ItemEntity {
 
   private void addPoints(RegisterPointBoxItemDto.Request request) {
     if (FIXED_POINT_BOX_ITEM == this.getType()) {
-      updateFixedPointEntities(request.getFixedPoints());
+      updateFixedPointEntities(request.getFixedPointDtos());
     } else if (RANDOM_POINT_BOX_ITEM == this.getType()) {
-      updateRandomPointEntities(request.getRandomPoints());
+      updateRandomPointEntities(request.getRandomPointDtos());
     } else {
       throw new WebStoreException(ITEM_TYPE_NOT_FOUND);
     }
@@ -108,10 +108,10 @@ public class PointBoxItemEntity extends ItemEntity {
   private void updatePoints(UpdatePointBoxItemDto.Request request) {
     if (FIXED_POINT_BOX_ITEM == this.getType()) {
       this.fixedPointEntities.clear();
-      updateFixedPointEntities(request.getFixedPoints());
+      updateFixedPointEntities(request.getFixedPointDtos());
     } else if (RANDOM_POINT_BOX_ITEM == this.getType()) {
       this.randomPointEntities.clear();
-      updateRandomPointEntities(request.getRandomPoints());
+      updateRandomPointEntities(request.getRandomPointDtos());
     } else {
       throw new WebStoreException(ITEM_TYPE_NOT_FOUND);
     }

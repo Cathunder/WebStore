@@ -24,16 +24,19 @@ public class UpdatePointBoxItemDto {
   @AllArgsConstructor
   @Builder
   @ValidProbabilitySum
-  public static class Request extends SalePeriod {
+  public static class Request extends SalePeriod implements PointBoxItemRequest {
 
     @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
 
-    @Valid
-    private List<FixedPointDto> fixedPoints;
+    // 타입 변경은 불가능
+    // private ItemType type;
 
     @Valid
-    private List<RandomPointDto> randomPoints;
+    private List<FixedPointDto> fixedPointDtos;
+
+    @Valid
+    private List<RandomPointDto> randomPointDtos;
 
     @Min(value = 0, message = "구매시 필요한 포인트는 0 이상이어야 합니다.")
     private int requiredPoint;
@@ -47,6 +50,11 @@ public class UpdatePointBoxItemDto {
 
     @Min(value = 1, message = "일일 구매 제한 개수는 1 이상이어야 합니다.")
     private int dailyLimitCount;
+
+    @Override
+    public ItemType getType() {
+      return null;
+    }
   }
 
   @Getter
@@ -58,8 +66,8 @@ public class UpdatePointBoxItemDto {
     private Long adminId;
     private String name;
     private ItemType type;
-    private List<FixedPointDto> fixedPoints;
-    private List<RandomPointDto> randomPoints;
+    private List<FixedPointDto> fixedPointDtos;
+    private List<RandomPointDto> randomPointDtos;
     private int requiredPoint;
     private int stock;
     private String stockResetTime;
@@ -74,8 +82,8 @@ public class UpdatePointBoxItemDto {
           .adminId(pointBoxItemEntity.getAdminEntity().getId())
           .name(pointBoxItemEntity.getName())
           .type(pointBoxItemEntity.getType())
-          .fixedPoints(FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities()))
-          .randomPoints(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
+          .fixedPointDtos(FixedPointDto.from(pointBoxItemEntity.getFixedPointEntities()))
+          .randomPointDtos(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
           .requiredPoint(pointBoxItemEntity.getRequiredPoint())
           .stock(pointBoxItemEntity.getStock())
           .stockResetTime(pointBoxItemEntity.getStockResetTime().format(DateTimeFormatter.ofPattern("HH시")))
