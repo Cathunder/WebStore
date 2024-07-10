@@ -1,6 +1,7 @@
 package com.project.WebStore.user.dto;
 
 import com.project.WebStore.item.entity.CashItemEntity;
+import com.project.WebStore.item.entity.ItemEntity;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,19 +20,20 @@ public class ItemDto {
   private Integer stock;
 
   public static ItemDto from(PointBoxItemEntity pointBoxItemEntity) {
-    return ItemDto.builder()
-        .id(pointBoxItemEntity.getId())
-        .name(pointBoxItemEntity.getName())
-        .requiredPoint(pointBoxItemEntity.getRequiredPoint())
+    return commonBuilder(pointBoxItemEntity)
         .stock(pointBoxItemEntity.getStock())
         .build();
   }
 
   public static ItemDto from(CashItemEntity cashItemEntity) {
-    return ItemDto.builder()
-        .id(cashItemEntity.getId())
-        .name(cashItemEntity.getName())
-        .requiredPoint(cashItemEntity.getRequiredPoint())
+    return commonBuilder(cashItemEntity)
         .build();
+  }
+
+  public static ItemDtoBuilder commonBuilder(ItemEntity itemEntity) {
+    return ItemDto.builder()
+        .id(itemEntity.getId())
+        .name(itemEntity.getName())
+        .requiredPoint(itemEntity.getRequiredPoint());
   }
 }

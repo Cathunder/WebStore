@@ -5,6 +5,7 @@ import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
 import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 
 import com.project.WebStore.admin.entity.AdminEntity;
@@ -14,6 +15,7 @@ import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RandomPointDto;
 import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
+import com.project.WebStore.user.dto.ItemDetailsDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,6 +50,18 @@ public class PointBoxItemEntity extends ItemEntity {
 
   private LocalDateTime startedAt;
   private LocalDateTime endedAt;
+
+  @Override
+  public void checkStatus() {
+    if (this.getStatus() == INACTIVE || this.getStartedAt().isAfter(LocalDateTime.now())) {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  @Override
+  public ItemDetailsDto.Response toResponse() {
+    return ItemDetailsDto.Response.from(this);
+  }
 
   public static PointBoxItemEntity create(RegisterPointBoxItemDto.Request request, AdminEntity adminEntity) {
     PointBoxItemEntity pointBoxItemEntity = PointBoxItemEntity.builder()

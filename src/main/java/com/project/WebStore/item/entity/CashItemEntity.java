@@ -3,11 +3,13 @@ package com.project.WebStore.item.entity;
 import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
 import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
 import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.RegisterCashItemDto.Request;
 import com.project.WebStore.item.dto.UpdateCashItemDto;
+import com.project.WebStore.user.dto.ItemDetailsDto;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +23,18 @@ import lombok.experimental.SuperBuilder;
 public class CashItemEntity extends ItemEntity {
 
   private int cashAmount;
+
+  @Override
+  public void checkStatus() {
+    if (this.getStatus() == INACTIVE) {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  @Override
+  public ItemDetailsDto.Response toResponse() {
+    return ItemDetailsDto.Response.from(this);
+  }
 
   public static CashItemEntity create(Request request, AdminEntity adminEntity) {
     return CashItemEntity.builder()

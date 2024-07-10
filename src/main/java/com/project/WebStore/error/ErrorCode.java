@@ -12,6 +12,7 @@ public enum ErrorCode {
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
   UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+  CLASS_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 클래스입니다."),
 
   // 유저, 관리자
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),

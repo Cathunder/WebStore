@@ -2,6 +2,7 @@ package com.project.WebStore.item.entity;
 
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.common.type.ItemStatus;
+import com.project.WebStore.user.dto.ItemDetailsDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -53,4 +54,7 @@ public abstract class ItemEntity {
 
   @LastModifiedDate
   private LocalDateTime updatedAt;
+
+  public abstract void checkStatus();
+  public abstract ItemDetailsDto.Response toResponse();
 }

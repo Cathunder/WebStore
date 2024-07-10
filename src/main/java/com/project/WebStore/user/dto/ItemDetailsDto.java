@@ -48,7 +48,9 @@ public class ItemDetailsDto {
     private String endedAt;
 
     public static Response from(PointBoxItemEntity pointBoxItemEntity) {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
       ItemType type = pointBoxItemEntity.getType();
+
       ResponseBuilder responseBuilder = getResponseBuilder(pointBoxItemEntity);
 
       if (type == FIXED_POINT_BOX_ITEM) {
@@ -59,18 +61,28 @@ public class ItemDetailsDto {
         throw new WebStoreException(POINT_BOX_ITEM_TYPE_NOT_EXIST);
       }
 
+      responseBuilder.stock(pointBoxItemEntity.getStock())
+          .startedAt(pointBoxItemEntity.getStartedAt().format(formatter))
+          .endedAt(pointBoxItemEntity.getEndedAt().format(formatter));
+
+      return responseBuilder.build();
+    }
+
+    public static Response from(CashItemEntity cashItemEntity) {
+      ResponseBuilder responseBuilder = Response.builder()
+          .name(cashItemEntity.getName())
+          .cashAmount(cashItemEntity.getCashAmount())
+          .requiredPoint(cashItemEntity.getRequiredPoint())
+          .dailyLimitCount(cashItemEntity.getDailyLimitCount());
+
       return responseBuilder.build();
     }
 
     private static ResponseBuilder getResponseBuilder(PointBoxItemEntity pointBoxItemEntity) {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
       return Response.builder()
           .name(pointBoxItemEntity.getName())
           .requiredPoint(pointBoxItemEntity.getRequiredPoint())
-          .stock(pointBoxItemEntity.getStock())
-          .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount())
-          .startedAt(pointBoxItemEntity.getStartedAt().format(formatter))
-          .endedAt(pointBoxItemEntity.getEndedAt().format(formatter));
+          .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount());
     }
 
     private static List<Integer> getFixedPointsAmount(PointBoxItemEntity pointBoxItemEntity) {
@@ -83,16 +95,6 @@ public class ItemDetailsDto {
       return RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()).stream()
           .flatMap(randomPointDto -> Stream.of(randomPointDto.getMinPoint(), randomPointDto.getMaxPoint()))
           .toList();
-    }
-
-    public static Response from(CashItemEntity cashItemEntity) {
-      ResponseBuilder responseBuilder = Response.builder()
-          .name(cashItemEntity.getName())
-          .cashAmount(cashItemEntity.getCashAmount())
-          .requiredPoint(cashItemEntity.getRequiredPoint())
-          .dailyLimitCount(cashItemEntity.getDailyLimitCount());
-
-      return responseBuilder.build();
     }
   }
 }
