@@ -23,5 +23,6 @@ public class CashHistoryEntity extends BaseEntity {
   private UserEntity userEntity;
 
   private int amount;
+  private int cashAmount;
   private LocalDateTime transactionAt;
 }

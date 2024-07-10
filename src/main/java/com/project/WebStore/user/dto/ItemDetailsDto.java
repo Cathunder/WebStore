@@ -39,6 +39,7 @@ public class ItemDetailsDto {
     private String name;
     private List<Integer> fixedPointsAmount;
     private List<Integer> randomPointsMinMax;
+    private Integer cashAmount;
     private Integer requiredPoint;
     private Integer stock;
     private Integer dailyLimitCount;
@@ -87,6 +88,7 @@ public class ItemDetailsDto {
     public static Response from(CashItemEntity cashItemEntity) {
       ResponseBuilder responseBuilder = Response.builder()
           .name(cashItemEntity.getName())
+          .cashAmount(cashItemEntity.getCashAmount())
           .requiredPoint(cashItemEntity.getRequiredPoint())
           .dailyLimitCount(cashItemEntity.getDailyLimitCount());
 

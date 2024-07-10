@@ -15,6 +15,7 @@ public class CashItemDto {
   private Long id;
   private Long adminId;
   private String name;
+  private int cashAmount;
   private int requiredPoint;
   private int dailyLimitCount;
   private ItemStatus status;
@@ -24,6 +25,7 @@ public class CashItemDto {
         .id(cashItemEntity.getId())
         .adminId(cashItemEntity.getAdminEntity().getId())
         .name(cashItemEntity.getName())
+        .cashAmount(cashItemEntity.getCashAmount())
         .requiredPoint(cashItemEntity.getRequiredPoint())
         .dailyLimitCount(cashItemEntity.getDailyLimitCount())
         .status(cashItemEntity.getStatus())
