@@ -1,7 +1,11 @@
 package com.project.WebStore.item.entity;
 
+import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
+import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+
 import com.project.WebStore.admin.entity.AdminEntity;
-import com.project.WebStore.common.type.ItemStatus;
+import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.RegisterCashItemDto.Request;
 import com.project.WebStore.item.dto.UpdateCashItemDto;
 import jakarta.persistence.Entity;
@@ -25,7 +29,7 @@ public class CashItemEntity extends ItemEntity {
         .cashAmount(request.getCashAmount())
         .requiredPoint(request.getRequiredPoint())
         .dailyLimitCount(request.getDailyLimitCount())
-        .status(ItemStatus.ACTIVE)
+        .status(ACTIVE)
         .build();
   }
 
@@ -37,6 +41,9 @@ public class CashItemEntity extends ItemEntity {
   }
 
   public void changeStatusToInactive() {
-    this.status = ItemStatus.INACTIVE;
+    if (this.status == INACTIVE) {
+      throw new WebStoreException(ALREADY_INACTIVE);
+    }
+    this.status = INACTIVE;
   }
 }

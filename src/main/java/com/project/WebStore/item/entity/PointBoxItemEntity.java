@@ -1,11 +1,13 @@
 package com.project.WebStore.item.entity;
 
+import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
+import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
 import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
+import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 
 import com.project.WebStore.admin.entity.AdminEntity;
-import com.project.WebStore.common.type.ItemStatus;
 import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.FixedPointDto;
@@ -60,7 +62,7 @@ public class PointBoxItemEntity extends ItemEntity {
         .dailyLimitCount(request.getDailyLimitCount())
         .startedAt(request.getStartedAt())
         .endedAt(request.getEndedAt())
-        .status(ItemStatus.ACTIVE)
+        .status(ACTIVE)
         .build();
 
     pointBoxItemEntity.addPoints(request);
@@ -124,6 +126,9 @@ public class PointBoxItemEntity extends ItemEntity {
   }
 
   public void changeStatusToInactive() {
-    this.status = ItemStatus.INACTIVE;
+    if (this.status == INACTIVE) {
+      throw new WebStoreException(ALREADY_INACTIVE);
+    }
+    this.status = INACTIVE;
   }
 }
