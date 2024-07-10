@@ -31,6 +31,7 @@ public enum ErrorCode {
   SALE_PERIOD_ENDED(HttpStatus.CONFLICT, "판매 종료된 상품입니다."),
   NOT_ENOUGH_POINT(HttpStatus.CONFLICT, "포인트가 부족합니다."),
   DAILY_LIMIT_REACHED(HttpStatus.CONFLICT, "일일 구매 제한 개수에 도달했습니다."),
+  ALREADY_INACTIVE(HttpStatus.CONFLICT, "이미 비활성화된 아이템입니다."),
 
   // 히스토리
   HISTORY_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 히스토리 타입입니다."),

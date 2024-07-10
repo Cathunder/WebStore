@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ItemDto {
 
+  private Long id;
   private String name;
   private int requiredPoint;
   private Integer stock;
 
   public static ItemDto from(PointBoxItemEntity pointBoxItemEntity) {
     return ItemDto.builder()
+        .id(pointBoxItemEntity.getId())
         .name(pointBoxItemEntity.getName())
         .requiredPoint(pointBoxItemEntity.getRequiredPoint())
         .stock(pointBoxItemEntity.getStock())
@@ -27,6 +29,7 @@ public class ItemDto {
 
   public static ItemDto from(CashItemEntity cashItemEntity) {
     return ItemDto.builder()
+        .id(cashItemEntity.getId())
         .name(cashItemEntity.getName())
         .requiredPoint(cashItemEntity.getRequiredPoint())
         .build();

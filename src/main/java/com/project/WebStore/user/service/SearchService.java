@@ -1,8 +1,12 @@
 package com.project.WebStore.user.service;
 
 import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
+import static com.project.WebStore.common.type.ItemType.CASH_ITEM;
+import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.entity.CashItemEntity;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
@@ -29,8 +33,8 @@ public class SearchService {
   private final PointBoxItemRepository pointBoxItemRepository;
   private final CashItemRepository cashItemRepository;
 
-  // findAll
-  public Page<Object> findAll(Pageable pageable) {
+  // findAllItems
+  public Page<Object> findAllItems(Pageable pageable) {
     List<ItemDto> pointBoxItemDtos = getPointBoxItemDtos(pageable);
     List<ItemDto> cashItemDtos = getCashItemDtos(pageable);
 
@@ -46,7 +50,7 @@ public class SearchService {
     Page<PointBoxItemEntity> pointBoxItemEntitiesPage = pointBoxItemRepository.findAll(pageable);
     return pointBoxItemEntitiesPage.stream()
         .filter(pointBoxItemEntity -> pointBoxItemEntity.getStatus() == ACTIVE
-            && pointBoxItemEntity.getStartedAt().isBefore(LocalDateTime.now()))
+            && pointBoxItemEntity.getStartedAt().isBefore(LocalDateTime.now())) // 현재시간 기준 판매중인 포인트박스만 검색
         .map(ItemDto::from)
         .toList();
   }
@@ -65,39 +69,44 @@ public class SearchService {
     return itemDtos.subList(start, end);
   }
 
-  // findOne
-  public ItemDetailsDto.Response findOne(Long itemId, ItemDetailsDto.Request request) {
-    switch (request.getType()) {
-      case FIXED_POINT_BOX_ITEM:
-      case RANDOM_POINT_BOX_ITEM:
-        return ItemDetailsDto.Response.from(getPointBoxItemEntity(itemId, request));
-      case CASH_ITEM:
-        return ItemDetailsDto.Response.from(getCashItemEntity(itemId));
-      default:
-        throw new WebStoreException(ITEM_NOT_FOUND);
-    }
-  }
+  // getItemDetails
+  public ItemDetailsDto.Response getItemDetails(Long itemId, ItemDetailsDto.Request request) {
+    ItemType type = request.getType();
 
-  private PointBoxItemEntity getPointBoxItemEntity(Long itemId, ItemDetailsDto.Request request) {
-    PointBoxItemEntity pointBoxItemEntity = pointBoxItemRepository.findById(itemId)
-        .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
-
-    if (pointBoxItemEntity.getStatus() == ACTIVE
-        && pointBoxItemEntity.getType() == request.getType()
-        && pointBoxItemEntity.getStartedAt().isBefore(LocalDateTime.now())) {
-      return pointBoxItemEntity;
+    if (type == FIXED_POINT_BOX_ITEM || type == RANDOM_POINT_BOX_ITEM) {
+      PointBoxItemEntity pointBoxItemEntity = getPointBoxItemEntity(itemId);
+      checkValidation(pointBoxItemEntity, type);
+      return ItemDetailsDto.Response.from(pointBoxItemEntity);
+    } else if(type == CASH_ITEM) {
+      CashItemEntity cashItemEntity = getCashItemEntity(itemId);
+      checkValidation(cashItemEntity);
+      return ItemDetailsDto.Response.from(cashItemEntity);
     } else {
       throw new WebStoreException(ITEM_NOT_FOUND);
     }
   }
 
-  private CashItemEntity getCashItemEntity(Long itemId) {
-    CashItemEntity cashItemEntity = cashItemRepository.findById(itemId)
+  private PointBoxItemEntity getPointBoxItemEntity(Long itemId) {
+    return pointBoxItemRepository.findById(itemId)
         .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
+  }
 
-    if (cashItemEntity.getStatus() == ACTIVE) {
-      return cashItemEntity;
-    } else {
+  private void checkValidation(PointBoxItemEntity pointBoxItemEntity, ItemType type) {
+    if (pointBoxItemEntity.getStatus() != ACTIVE
+        || pointBoxItemEntity.getType() != type
+        || pointBoxItemEntity.getStartedAt().isAfter(LocalDateTime.now())
+    ) {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  private CashItemEntity getCashItemEntity(Long itemId) {
+    return cashItemRepository.findById(itemId)
+        .orElseThrow(() -> new WebStoreException(ITEM_NOT_FOUND));
+  }
+
+  private void checkValidation(CashItemEntity cashItemEntity) {
+    if (cashItemEntity.getStatus() != ACTIVE) {
       throw new WebStoreException(ITEM_NOT_FOUND);
     }
   }

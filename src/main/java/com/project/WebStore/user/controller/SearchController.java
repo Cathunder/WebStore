@@ -20,15 +20,15 @@ public class SearchController {
   private final SearchService searchService;
 
   @GetMapping("")
-  public ResponseEntity<?> findAll(Pageable pageable) {
-    return ResponseEntity.ok(searchService.findAll(pageable));
+  public ResponseEntity<?> findAllItems(Pageable pageable) {
+    return ResponseEntity.ok(searchService.findAllItems(pageable));
   }
 
   @GetMapping("/details/{id}")
-  public ResponseEntity<?> findOne(
+  public ResponseEntity<?> getItemDetails(
       @PathVariable("id") Long id,
       @RequestBody @Valid ItemDetailsDto.Request request
   ) {
-    return ResponseEntity.ok(searchService.findOne(id, request));
+    return ResponseEntity.ok(searchService.getItemDetails(id, request));
   }
 }
