@@ -1,10 +1,9 @@
 package com.project.WebStore.user.entity;
 
 import com.project.WebStore.common.entity.BaseEntity;
-import com.project.WebStore.common.type.ItemType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,15 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name = "purchase_item")
-public class PurchaseItemEntity extends BaseEntity {
+@Entity(name = "purchase_history")
+public class PurchaseHistoryEntity extends BaseEntity {
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserEntity userEntity;
 
   private Long itemId;
-
-  @Enumerated(EnumType.STRING)
-  private ItemType itemType;
-
+  private String itemName;
   private int quantity;
-
   private LocalDateTime purchasedAt;
 }
