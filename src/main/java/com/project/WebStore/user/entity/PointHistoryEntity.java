@@ -30,6 +30,6 @@ public class PointHistoryEntity extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private HistoryType type;
 
-  private int amount;
+  private int pointAmount;
   private LocalDateTime transactionAt;
 }

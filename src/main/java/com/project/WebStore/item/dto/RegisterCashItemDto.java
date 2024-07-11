@@ -21,6 +21,10 @@ public class RegisterCashItemDto {
     @NotBlank(message = "아이템명을 입력하세요.")
     private String name;
 
+    @NotNull(message = "제공되는 캐시를 입력하세요.")
+    @Min(value = 0, message = "제공되는 캐시는 0 이상이어야 합니다.")
+    private int cashAmount;
+
     @NotNull(message = "구매시 필요한 포인트를 입력하세요.")
     @Min(value = 0, message = "구매시 필요한 포인트는 0 이상이어야 합니다.")
     private int requiredPoint;
@@ -39,6 +43,7 @@ public class RegisterCashItemDto {
     private Long id;
     private Long adminId;
     private String name;
+    private int cashAmount;
     private int requiredPoint;
     private int dailyLimitCount;
     private ItemStatus status;
@@ -48,6 +53,7 @@ public class RegisterCashItemDto {
           .id(cashItemEntity.getId())
           .adminId(cashItemEntity.getAdminEntity().getId())
           .name(cashItemEntity.getName())
+          .cashAmount(cashItemEntity.getCashAmount())
           .requiredPoint(cashItemEntity.getRequiredPoint())
           .dailyLimitCount(cashItemEntity.getDailyLimitCount())
           .status(cashItemEntity.getStatus())

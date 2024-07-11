@@ -1,52 +1,43 @@
 package com.project.WebStore.item.entity;
 
-import static com.project.WebStore.common.type.PointBoxItemType.FIXED_POINT_BOX_ITEM;
-import static com.project.WebStore.common.type.PointBoxItemType.RANDOM_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
+import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
+import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
+import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
+import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 
 import com.project.WebStore.admin.entity.AdminEntity;
-import com.project.WebStore.common.entity.BaseEntity;
-import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.FixedPointDto;
 import com.project.WebStore.item.dto.RandomPointDto;
 import com.project.WebStore.item.dto.RegisterPointBoxItemDto;
 import com.project.WebStore.item.dto.UpdatePointBoxItemDto;
+import com.project.WebStore.user.dto.ItemDetailsDto;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 @Entity(name = "point_box_item")
-public class PointBoxItemEntity extends BaseEntity {
-
-  @ManyToOne
-  @JoinColumn(name = "admin_id")
-  private AdminEntity adminEntity;
-
-  @Column(unique = true)
-  private String name;
+public class PointBoxItemEntity extends ItemEntity {
 
   @Enumerated(EnumType.STRING)
-  private PointBoxItemType type;
+  private ItemType type;
 
   @OneToMany(mappedBy = "pointBoxItemEntity", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FixedPointEntity> fixedPointEntities = new ArrayList<>();
@@ -54,15 +45,23 @@ public class PointBoxItemEntity extends BaseEntity {
   @OneToMany(mappedBy = "pointBoxItemEntity", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RandomPointEntity> randomPointEntities = new ArrayList<>();
 
-  private int requiredPoint;
   private int stock;
   private LocalTime stockResetTime;
-  private int dailyLimitCount;
+
   private LocalDateTime startedAt;
   private LocalDateTime endedAt;
 
-  @Enumerated(EnumType.STRING)
-  private ItemStatus status;
+  @Override
+  public void checkStatus() {
+    if (this.getStatus() == INACTIVE || this.getStartedAt().isAfter(LocalDateTime.now())) {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
+
+  @Override
+  public ItemDetailsDto.Response toResponse() {
+    return ItemDetailsDto.Response.from(this);
+  }
 
   public static PointBoxItemEntity create(RegisterPointBoxItemDto.Request request, AdminEntity adminEntity) {
     PointBoxItemEntity pointBoxItemEntity = PointBoxItemEntity.builder()
@@ -77,7 +76,7 @@ public class PointBoxItemEntity extends BaseEntity {
         .dailyLimitCount(request.getDailyLimitCount())
         .startedAt(request.getStartedAt())
         .endedAt(request.getEndedAt())
-        .status(ItemStatus.ACTIVE)
+        .status(ACTIVE)
         .build();
 
     pointBoxItemEntity.addPoints(request);
@@ -86,9 +85,9 @@ public class PointBoxItemEntity extends BaseEntity {
 
   private void addPoints(RegisterPointBoxItemDto.Request request) {
     if (FIXED_POINT_BOX_ITEM == this.getType()) {
-      updateFixedPointEntities(request.getFixedPoints());
+      updateFixedPointEntities(request.getFixedPointDtos());
     } else if (RANDOM_POINT_BOX_ITEM == this.getType()) {
-      updateRandomPointEntities(request.getRandomPoints());
+      updateRandomPointEntities(request.getRandomPointDtos());
     } else {
       throw new WebStoreException(ITEM_TYPE_NOT_FOUND);
     }
@@ -109,10 +108,10 @@ public class PointBoxItemEntity extends BaseEntity {
   private void updatePoints(UpdatePointBoxItemDto.Request request) {
     if (FIXED_POINT_BOX_ITEM == this.getType()) {
       this.fixedPointEntities.clear();
-      updateFixedPointEntities(request.getFixedPoints());
+      updateFixedPointEntities(request.getFixedPointDtos());
     } else if (RANDOM_POINT_BOX_ITEM == this.getType()) {
       this.randomPointEntities.clear();
-      updateRandomPointEntities(request.getRandomPoints());
+      updateRandomPointEntities(request.getRandomPointDtos());
     } else {
       throw new WebStoreException(ITEM_TYPE_NOT_FOUND);
     }
@@ -141,6 +140,9 @@ public class PointBoxItemEntity extends BaseEntity {
   }
 
   public void changeStatusToInactive() {
-    this.status = ItemStatus.INACTIVE;
+    if (this.status == INACTIVE) {
+      throw new WebStoreException(ALREADY_INACTIVE);
+    }
+    this.status = INACTIVE;
   }
 }

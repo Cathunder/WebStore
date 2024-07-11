@@ -7,11 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = ItemTypeValidator.class)
+@Constraint(validatedBy = PointBoxItemTypeValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidItemType {
-  String message() default "유효하지 않은 아이템형입니다.";
+public @interface ValidPointBoxItemType {
+  String message() default "유효하지 않은 박스형입니다.";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
 }

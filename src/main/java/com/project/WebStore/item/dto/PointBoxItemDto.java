@@ -1,10 +1,9 @@
 package com.project.WebStore.item.dto;
 
 import com.project.WebStore.common.type.ItemStatus;
-import com.project.WebStore.common.type.PointBoxItemType;
+import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.item.entity.PointBoxItemEntity;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,15 +20,15 @@ public class PointBoxItemDto {
   private Long id;
   private Long adminId;
   private String name;
-  private PointBoxItemType type;
+  private ItemType type;
   private List<FixedPointDto> fixedPointDtos = new ArrayList<>();
   private List<RandomPointDto> randomPointDtos = new ArrayList<>();
   private int requiredPoint;
   private int stock;
-  private LocalTime stockResetTime;
+  private String stockResetTime;
   private int dailyLimitCount;
-  private LocalDateTime startedAt;
-  private LocalDateTime endedAt;
+  private String startedAt;
+  private String endedAt;
   private ItemStatus status;
 
   public static PointBoxItemDto from(PointBoxItemEntity pointBoxItemEntity) {
@@ -42,10 +41,10 @@ public class PointBoxItemDto {
         .randomPointDtos(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
         .requiredPoint(pointBoxItemEntity.getRequiredPoint())
         .stock(pointBoxItemEntity.getStock())
-        .stockResetTime(pointBoxItemEntity.getStockResetTime())
+        .stockResetTime(pointBoxItemEntity.getStockResetTime().format(DateTimeFormatter.ofPattern("HH시")))
         .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount())
-        .startedAt(pointBoxItemEntity.getStartedAt())
-        .endedAt(pointBoxItemEntity.getEndedAt())
+        .startedAt(pointBoxItemEntity.getStartedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시")))
+        .endedAt(pointBoxItemEntity.getEndedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시")))
         .status(pointBoxItemEntity.getStatus())
         .build();
   }

@@ -1,7 +1,10 @@
 package com.project.WebStore.user.entity;
 
 import com.project.WebStore.common.entity.BaseEntity;
+import com.project.WebStore.common.type.HistoryType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
@@ -22,6 +25,11 @@ public class CashHistoryEntity extends BaseEntity {
   @JoinColumn(name = "user_id")
   private UserEntity userEntity;
 
-  private int amount;
+  private String itemName;
+
+  @Enumerated(EnumType.STRING)
+  private HistoryType type;
+
+  private int cashAmount;
   private LocalDateTime transactionAt;
 }

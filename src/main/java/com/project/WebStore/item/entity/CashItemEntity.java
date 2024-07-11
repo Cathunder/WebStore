@@ -1,59 +1,63 @@
 package com.project.WebStore.item.entity;
 
+import static com.project.WebStore.common.type.ItemStatus.ACTIVE;
+import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
+
 import com.project.WebStore.admin.entity.AdminEntity;
-import com.project.WebStore.common.entity.BaseEntity;
-import com.project.WebStore.common.type.ItemStatus;
+import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.dto.RegisterCashItemDto.Request;
 import com.project.WebStore.item.dto.UpdateCashItemDto;
-import jakarta.persistence.Column;
+import com.project.WebStore.user.dto.ItemDetailsDto;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 @Entity(name = "cash_item")
-public class CashItemEntity extends BaseEntity {
+public class CashItemEntity extends ItemEntity {
 
-  @ManyToOne
-  @JoinColumn(name = "admin_id")
-  private AdminEntity adminEntity;
+  private int cashAmount;
 
-  @Column(unique = true)
-  private String name;
+  @Override
+  public void checkStatus() {
+    if (this.getStatus() == INACTIVE) {
+      throw new WebStoreException(ITEM_NOT_FOUND);
+    }
+  }
 
-  private int requiredPoint;
-  private int dailyLimitCount;
-
-  @Enumerated(EnumType.STRING)
-  private ItemStatus status;
+  @Override
+  public ItemDetailsDto.Response toResponse() {
+    return ItemDetailsDto.Response.from(this);
+  }
 
   public static CashItemEntity create(Request request, AdminEntity adminEntity) {
     return CashItemEntity.builder()
         .adminEntity(adminEntity)
         .name(request.getName())
+        .cashAmount(request.getCashAmount())
         .requiredPoint(request.getRequiredPoint())
         .dailyLimitCount(request.getDailyLimitCount())
-        .status(ItemStatus.ACTIVE)
+        .status(ACTIVE)
         .build();
   }
 
   public void updateEntity(UpdateCashItemDto.Request request) {
     this.name = request.getName();
+    this.cashAmount = request.getCashAmount();
     this.requiredPoint = request.getRequiredPoint();
     this.dailyLimitCount = request.getDailyLimitCount();
   }
 
   public void changeStatusToInactive() {
-    this.status = ItemStatus.INACTIVE;
+    if (this.status == INACTIVE) {
+      throw new WebStoreException(ALREADY_INACTIVE);
+    }
+    this.status = INACTIVE;
   }
 }
