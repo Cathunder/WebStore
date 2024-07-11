@@ -6,6 +6,7 @@ import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.CLASS_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
+import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 
 import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
@@ -37,17 +38,18 @@ public class SearchService {
   private final CashItemRepository cashItemRepository;
 
   // findAllItems
-  public Page<Object> findAllItems(Pageable pageable) {
-    List<ItemDto> pointBoxItemDtos = findActiveItemDtos(PointBoxItemEntity.class,pageable);
+  public Page<ItemDto> findAllItems(Pageable pageable) {
+    List<ItemDto> pointBoxItemDtos = findActiveItemDtos(PointBoxItemEntity.class, pageable);
     List<ItemDto> cashItemDtos = findActiveItemDtos(CashItemEntity.class, pageable);
 
-    List<Object> concatItemDtos = concatDtos(pointBoxItemDtos, cashItemDtos);
-    List<Object> contents = getContents(pageable, concatItemDtos);
+    List<ItemDto> concatItemDtos = Stream.concat(pointBoxItemDtos.stream(), cashItemDtos.stream())
+        .collect(Collectors.toList());
+    List<ItemDto> contents = getContents(pageable, concatItemDtos);
 
     return new PageImpl<>(contents, pageable, concatItemDtos.size());
   }
 
-  private List<ItemDto> findActiveItemDtos(Class<? extends ItemEntity> itemEntity, Pageable pageable) {
+  private <T extends ItemEntity> List<ItemDto> findActiveItemDtos(Class<T> itemEntity, Pageable pageable) {
     if (itemEntity.equals(PointBoxItemEntity.class)) {
       return pointBoxItemRepository.findAll(pageable).stream()
           .filter(pointBoxItemEntity -> pointBoxItemEntity.getStatus() == ACTIVE
@@ -64,12 +66,7 @@ public class SearchService {
     }
   }
 
-  private static List<Object> concatDtos(List<ItemDto> pointBoxItemDtos, List<ItemDto> cashItemDtos) {
-    return Stream.concat(pointBoxItemDtos.stream(), cashItemDtos.stream())
-        .collect(Collectors.toList());
-  }
-
-  private List<Object> getContents(Pageable pageable, List<Object> itemDtos) {
+  private List<ItemDto> getContents(Pageable pageable, List<ItemDto> itemDtos) {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), itemDtos.size());
     return itemDtos.subList(start, end);
@@ -77,19 +74,19 @@ public class SearchService {
 
   // getItemDetails
   public ItemDetailsDto.Response getItemDetails(Long itemId, ItemDetailsDto.Request request) {
-    ItemType type = request.getType();
-
-    ItemEntity itemEntity;
-    if (type == FIXED_POINT_BOX_ITEM || type == RANDOM_POINT_BOX_ITEM) {
-      itemEntity = getItemEntity(itemId, pointBoxItemRepository);
-    } else if (type == CASH_ITEM) {
-      itemEntity = getItemEntity(itemId, cashItemRepository);
-    } else {
-      throw new WebStoreException(ITEM_NOT_FOUND);
-    }
-
+    ItemEntity itemEntity = selectType(itemId, request.getType());
     itemEntity.checkStatus();
     return itemEntity.toResponse();
+  }
+
+  private ItemEntity selectType(Long itemId, ItemType type) {
+    if (type == FIXED_POINT_BOX_ITEM || type == RANDOM_POINT_BOX_ITEM) {
+      return getItemEntity(itemId, pointBoxItemRepository);
+    } else if (type == CASH_ITEM) {
+      return getItemEntity(itemId, cashItemRepository);
+    } else {
+      throw new WebStoreException(ITEM_TYPE_NOT_FOUND);
+    }
   }
 
   private <T extends ItemEntity> T getItemEntity(Long itemId, JpaRepository<T, Long> repository) {
