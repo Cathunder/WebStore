@@ -1,6 +1,9 @@
 package com.project.WebStore.user.entity;
 
+import static com.project.WebStore.error.ErrorCode.NOT_ENOUGH_POINT;
+
 import com.project.WebStore.common.entity.BaseEntity;
+import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.user.dto.RegisterUserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,5 +37,20 @@ public class UserEntity extends BaseEntity {
         .point(1000)
         .cash(0)
         .build();
+  }
+
+  public void decreasePoint(int requiredPoint) {
+    if (this.point <= 0 || this.point < requiredPoint) {
+      throw new WebStoreException(NOT_ENOUGH_POINT);
+    }
+    this.point -= requiredPoint;
+  }
+
+  public void increasePoint(int earnPoint) {
+    this.point += earnPoint;
+  }
+
+  public void increaseCash(int earnCash) {
+    this.cash += earnCash;
   }
 }

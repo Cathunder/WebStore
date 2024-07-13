@@ -5,8 +5,10 @@ import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
 import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.INSUFFICIENT_STOCK;
 import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
+import static com.project.WebStore.error.ErrorCode.SOLD_OUT;
 
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.common.type.ItemType;
@@ -144,5 +146,17 @@ public class PointBoxItemEntity extends ItemEntity {
       throw new WebStoreException(ALREADY_INACTIVE);
     }
     this.status = INACTIVE;
+  }
+
+  public void decreaseStock(int purchaseQuantity) {
+    if (this.stock <= 0) {
+      throw new WebStoreException(SOLD_OUT);
+    }
+
+    if (this.stock < purchaseQuantity) {
+      throw new WebStoreException(INSUFFICIENT_STOCK);
+    }
+
+    this.stock -= purchaseQuantity;
   }
 }
