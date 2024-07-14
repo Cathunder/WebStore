@@ -3,6 +3,8 @@ package com.project.WebStore.user.repository;
 import com.project.WebStore.user.entity.PurchaseHistoryEntity;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,6 @@ public interface PurchaseHistoryRepository extends JpaRepository<PurchaseHistory
       @Param("itemName") String itemName,
       @Param("date") LocalDate date
   );
+
+  Page<PurchaseHistoryEntity> findByUserEntity_Id(Long userId, Pageable pageable);
 }
