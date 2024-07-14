@@ -24,7 +24,7 @@ public class HistoryService {
 
   public Page<PurchaseHistoryDto> findAllPurchaseHistory(UserDetails userDetails, Pageable pageable) {
     Long id = getUserId(userDetails);
-    return purchaseHistoryRepository.findByUserEntity_Id(id, pageable)
+    return purchaseHistoryRepository.findAllByUserId(id, pageable)
         .map(PurchaseHistoryDto::from);
   }
 

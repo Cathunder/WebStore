@@ -89,7 +89,7 @@ public class PurchaseService {
   }
 
   private List<PurchaseHistoryEntity> getPurchaseHistoryEntities(Long userId, String itemName) {
-    return purchaseHistoryRepository.findAllByUserAndItemNameAndDate(userId, itemName, LocalDate.now());
+    return purchaseHistoryRepository.findAllByUserIdAndItemNameAndDate(userId, itemName, LocalDate.now());
   }
 
 

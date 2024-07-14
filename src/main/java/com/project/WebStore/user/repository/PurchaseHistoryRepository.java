@@ -18,11 +18,12 @@ public interface PurchaseHistoryRepository extends JpaRepository<PurchaseHistory
       + "WHERE p.userEntity.id = :userId "
       + "AND p.itemName = :itemName "
       + "AND DATE(p.purchasedAt) = :date")
-  List<PurchaseHistoryEntity> findAllByUserAndItemNameAndDate(
+  List<PurchaseHistoryEntity> findAllByUserIdAndItemNameAndDate(
       @Param("userId") Long userId,
       @Param("itemName") String itemName,
       @Param("date") LocalDate date
   );
 
-  Page<PurchaseHistoryEntity> findByUserEntity_Id(Long userId, Pageable pageable);
+  @Query("SELECT p FROM purchase_history p WHERE p.userEntity.id = :userId")
+  Page<PurchaseHistoryEntity> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 }
