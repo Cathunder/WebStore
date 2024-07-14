@@ -13,12 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PointHistoryDto {
+  private String itemName;
+  private int itemQuantity;
   private int pointAmount;
   private HistoryType type;
   private String transactionAt;
 
   public static PointHistoryDto from(PointHistoryEntity pointHistoryEntity) {
     return PointHistoryDto.builder()
+        .itemName(pointHistoryEntity.getItemName())
+        .itemQuantity(pointHistoryEntity.getItemQuantity())
         .pointAmount(pointHistoryEntity.getPointAmount())
         .type(pointHistoryEntity.getType())
         .transactionAt(pointHistoryEntity.getTransactionAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")))

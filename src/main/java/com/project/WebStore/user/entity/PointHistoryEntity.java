@@ -31,6 +31,7 @@ public class PointHistoryEntity extends BaseEntity {
   private UserEntity userEntity;
 
   private String itemName;
+  private int itemQuantity;
 
   @Enumerated(EnumType.STRING)
   private HistoryType type;
@@ -44,6 +45,7 @@ public class PointHistoryEntity extends BaseEntity {
     return PointHistoryEntity.builder()
         .userEntity(userEntity)
         .itemName(itemEntity.getName())
+        .itemQuantity(purchaseQuantity)
         .type(USE)
         .pointAmount(itemEntity.getRequiredPoint() * purchaseQuantity)
         .transactionAt(purchasedAt)
@@ -51,11 +53,12 @@ public class PointHistoryEntity extends BaseEntity {
   }
 
   public static PointHistoryEntity createEntityForEarn(
-      UserEntity userEntity, PointBoxItemEntity pointBoxItemEntity, int earnPoint
+      UserEntity userEntity, PointBoxItemEntity pointBoxItemEntity, int earnPoint, int purchaseQuantity
   ) {
     return PointHistoryEntity.builder()
         .userEntity(userEntity)
         .itemName(pointBoxItemEntity.getName())
+        .itemQuantity(purchaseQuantity)
         .type(EARN)
         .pointAmount(earnPoint)
         .transactionAt(LocalDateTime.now())

@@ -23,4 +23,18 @@ public class HistoryController {
       Pageable pageable) {
     return ResponseEntity.ok(historyService.findAllPurchaseHistory(userDetails, pageable));
   }
+
+  @GetMapping("/point")
+  public ResponseEntity<?> findAllPointHistory(
+      @AuthenticationPrincipal UserDetails userDetails,
+      Pageable pageable) {
+    return ResponseEntity.ok(historyService.findAllPointHistory(userDetails, pageable));
+  }
+
+  @GetMapping("/cash")
+  public ResponseEntity<?> findAllCashHistory(
+      @AuthenticationPrincipal UserDetails userDetails,
+      Pageable pageable) {
+    return ResponseEntity.ok(historyService.findAllCashHistory(userDetails, pageable));
+  }
 }

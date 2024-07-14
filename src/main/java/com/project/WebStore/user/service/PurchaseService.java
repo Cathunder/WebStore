@@ -163,7 +163,7 @@ public class PurchaseService {
 
     // 포인트 적립 기록 저장
     PointHistoryEntity pointHistoryEntityForEarn
-        = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint);
+        = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
     pointHistoryRepository.save(pointHistoryEntityForEarn);
 
     // 구매 결과 반환
@@ -196,7 +196,7 @@ public class PurchaseService {
 
     // 캐시 적립 기록 저장
     CashHistoryEntity cashHistoryEntityForEarn
-        = CashHistoryEntity.createEntityForEarn(userEntity, cashItemEntity, earnCash);
+        = CashHistoryEntity.createEntityForEarn(userEntity, cashItemEntity, earnCash, purchaseQuantity);
     cashHistoryRepository.save(cashHistoryEntityForEarn);
 
     // 구매 결과 반환

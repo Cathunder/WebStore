@@ -13,12 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CashHistoryDto {
+  private String itemName;
+  private int itemQuantity;
   private int cashAmount;
   private HistoryType type;
   private String transactionAt;
 
   public static CashHistoryDto from(CashHistoryEntity cashHistoryEntity) {
     return CashHistoryDto.builder()
+        .itemName(cashHistoryEntity.getItemName())
+        .itemQuantity(cashHistoryEntity.getItemQuantity())
         .cashAmount(cashHistoryEntity.getCashAmount())
         .type(cashHistoryEntity.getType())
         .transactionAt(cashHistoryEntity.getTransactionAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")))

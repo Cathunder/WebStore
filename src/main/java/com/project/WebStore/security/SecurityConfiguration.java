@@ -28,7 +28,7 @@ public class SecurityConfiguration {
         .sessionManagement(sessionManagement ->
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/items/purchase/**", "/user/history/purchase").hasRole("USER")
+            .requestMatchers("/user/items/purchase/**", "/user/history/**").hasRole("USER")
             .requestMatchers("/user/register", "/user/signIn", "/user/items/**").permitAll()
             .requestMatchers("/admin/item/**").hasRole("ADMIN")
             .requestMatchers("/admin/register", "/admin/signIn").permitAll()

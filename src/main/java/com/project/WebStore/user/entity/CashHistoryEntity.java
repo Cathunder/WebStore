@@ -29,6 +29,7 @@ public class CashHistoryEntity extends BaseEntity {
   private UserEntity userEntity;
 
   private String itemName;
+  private int itemQuantity;
 
   @Enumerated(EnumType.STRING)
   private HistoryType type;
@@ -36,10 +37,13 @@ public class CashHistoryEntity extends BaseEntity {
   private int cashAmount;
   private LocalDateTime transactionAt;
 
-  public static CashHistoryEntity createEntityForEarn(UserEntity userEntity, CashItemEntity cashItemEntity, int earnCash) {
+  public static CashHistoryEntity createEntityForEarn(
+      UserEntity userEntity, CashItemEntity cashItemEntity, int earnCash, int purchaseQuantity
+  ) {
     return CashHistoryEntity.builder()
         .userEntity(userEntity)
         .itemName(cashItemEntity.getName())
+        .itemQuantity(purchaseQuantity)
         .type(EARN)
         .cashAmount(earnCash)
         .transactionAt(LocalDateTime.now())
