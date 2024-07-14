@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class HistoryService {
+public class HistoryForUserService {
 
   private final UserRepository userRepository;
   private final PurchaseHistoryRepository purchaseHistoryRepository;

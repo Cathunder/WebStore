@@ -1,6 +1,6 @@
 package com.project.WebStore.user.controller;
 
-import com.project.WebStore.user.service.HistoryService;
+import com.project.WebStore.user.service.HistoryForUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +13,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/history")
-public class HistoryController {
+public class HistoryForUserController {
 
-  private final HistoryService historyService;
+  private final HistoryForUserService historyForUserService;
 
   @GetMapping("/purchase")
   public ResponseEntity<?> findAllPurchaseHistory(
       @AuthenticationPrincipal UserDetails userDetails,
       Pageable pageable) {
-    return ResponseEntity.ok(historyService.findAllPurchaseHistory(userDetails, pageable));
+    return ResponseEntity.ok(historyForUserService.findAllPurchaseHistory(userDetails, pageable));
   }
 
   @GetMapping("/point")
   public ResponseEntity<?> findAllPointHistory(
       @AuthenticationPrincipal UserDetails userDetails,
       Pageable pageable) {
-    return ResponseEntity.ok(historyService.findAllPointHistory(userDetails, pageable));
+    return ResponseEntity.ok(historyForUserService.findAllPointHistory(userDetails, pageable));
   }
 
   @GetMapping("/cash")
   public ResponseEntity<?> findAllCashHistory(
       @AuthenticationPrincipal UserDetails userDetails,
       Pageable pageable) {
-    return ResponseEntity.ok(historyService.findAllCashHistory(userDetails, pageable));
+    return ResponseEntity.ok(historyForUserService.findAllCashHistory(userDetails, pageable));
   }
 }
