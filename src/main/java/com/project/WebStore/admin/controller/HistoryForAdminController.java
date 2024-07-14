@@ -41,4 +41,25 @@ public class HistoryForAdminController {
       Pageable pageable) {
     return ResponseEntity.ok(historyForAdminService.findUserCashHistory(userId, userDetails, pageable));
   }
+
+  @GetMapping("/purchase/users")
+  public ResponseEntity<?> findAllPurchaseHistory(
+      @AuthenticationPrincipal UserDetails userDetails,
+      Pageable pageable) {
+    return ResponseEntity.ok(historyForAdminService.findAllPurchaseHistory(userDetails, pageable));
+  }
+
+  @GetMapping("/point/users")
+  public ResponseEntity<?> findAllPointHistory(
+      @AuthenticationPrincipal UserDetails userDetails,
+      Pageable pageable) {
+    return ResponseEntity.ok(historyForAdminService.findAllPointHistory(userDetails, pageable));
+  }
+
+  @GetMapping("/cash/users")
+  public ResponseEntity<?> findAllCashHistory(
+      @AuthenticationPrincipal UserDetails userDetails,
+      Pageable pageable) {
+    return ResponseEntity.ok(historyForAdminService.findAllCashHistory(userDetails, pageable));
+  }
 }

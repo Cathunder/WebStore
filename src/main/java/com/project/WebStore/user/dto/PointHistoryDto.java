@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PointHistoryDto {
+
+  private Long userId;
   private String itemName;
   private int itemQuantity;
   private int pointAmount;
@@ -21,6 +23,7 @@ public class PointHistoryDto {
 
   public static PointHistoryDto from(PointHistoryEntity pointHistoryEntity) {
     return PointHistoryDto.builder()
+        .userId(pointHistoryEntity.getUserEntity().getId())
         .itemName(pointHistoryEntity.getItemName())
         .itemQuantity(pointHistoryEntity.getItemQuantity())
         .pointAmount(pointHistoryEntity.getPointAmount())

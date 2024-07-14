@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CashHistoryDto {
+
+  private Long userId;
   private String itemName;
   private int itemQuantity;
   private int cashAmount;
@@ -21,6 +23,7 @@ public class CashHistoryDto {
 
   public static CashHistoryDto from(CashHistoryEntity cashHistoryEntity) {
     return CashHistoryDto.builder()
+        .userId(cashHistoryEntity.getUserEntity().getId())
         .itemName(cashHistoryEntity.getItemName())
         .itemQuantity(cashHistoryEntity.getItemQuantity())
         .cashAmount(cashHistoryEntity.getCashAmount())

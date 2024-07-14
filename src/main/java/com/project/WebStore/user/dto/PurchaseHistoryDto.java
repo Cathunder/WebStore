@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PurchaseHistoryDto {
 
+  private Long userId;
   private Long itemId;
   private String itemName;
   private int quantity;
@@ -20,6 +21,7 @@ public class PurchaseHistoryDto {
 
   public static PurchaseHistoryDto from(PurchaseHistoryEntity purchaseHistoryEntity) {
     return PurchaseHistoryDto.builder()
+        .userId(purchaseHistoryEntity.getUserEntity().getId())
         .itemId(purchaseHistoryEntity.getItemId())
         .itemName(purchaseHistoryEntity.getItemName())
         .quantity(purchaseHistoryEntity.getQuantity())
