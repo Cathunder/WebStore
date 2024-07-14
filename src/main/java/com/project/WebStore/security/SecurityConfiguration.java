@@ -30,7 +30,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/user/items/purchase/**", "/user/history/**").hasRole("USER")
             .requestMatchers("/user/register", "/user/signIn", "/user/items/**").permitAll()
-            .requestMatchers("/admin/item/**").hasRole("ADMIN")
+            .requestMatchers("/admin/item/**", "/admin/history/**").hasRole("ADMIN")
             .requestMatchers("/admin/register", "/admin/signIn").permitAll()
             .anyRequest().authenticated())
         .exceptionHandling(exceptionHandling ->
