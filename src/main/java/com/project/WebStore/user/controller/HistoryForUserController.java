@@ -17,6 +17,11 @@ public class HistoryForUserController {
 
   private final HistoryForUserService historyForUserService;
 
+  @GetMapping("/point-and-cash")
+  public ResponseEntity<?> getCurrentPointAndCash(@AuthenticationPrincipal UserDetails userDetails) {
+    return ResponseEntity.ok(historyForUserService.getCurrentPointAndCash(userDetails));
+  }
+
   @GetMapping("/purchase")
   public ResponseEntity<?> findAllPurchaseHistory(
       @AuthenticationPrincipal UserDetails userDetails,

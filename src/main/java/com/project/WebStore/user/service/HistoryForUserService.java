@@ -4,6 +4,7 @@ import static com.project.WebStore.error.ErrorCode.USER_NOT_FOUND;
 
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.user.dto.CashHistoryDto;
+import com.project.WebStore.user.dto.PointAndCashDto;
 import com.project.WebStore.user.dto.PointHistoryDto;
 import com.project.WebStore.user.dto.PurchaseHistoryDto;
 import com.project.WebStore.user.entity.UserEntity;
@@ -28,6 +29,11 @@ public class HistoryForUserService {
   private final PointHistoryRepository pointHistoryRepository;
   private final CashHistoryRepository cashHistoryRepository;
 
+  public PointAndCashDto getCurrentPointAndCash(UserDetails userDetails) {
+    UserEntity userEntity = getUserEntity(userDetails);
+    return new PointAndCashDto(userEntity.getPoint(), userEntity.getCash());
+  }
+
   public Page<PurchaseHistoryDto> findAllPurchaseHistory(UserDetails userDetails, Pageable pageable) {
     Long id = getUserId(userDetails);
     return purchaseHistoryRepository.findAllByUserId(id, pageable)
@@ -51,5 +57,11 @@ public class HistoryForUserService {
     UserEntity userEntity = userRepository.findByEmail(email)
         .orElseThrow(() -> new WebStoreException(USER_NOT_FOUND));
     return userEntity.getId();
+  }
+
+  private UserEntity getUserEntity(UserDetails userDetails) {
+    String email = userDetails.getUsername();
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new WebStoreException(USER_NOT_FOUND));
   }
 }
