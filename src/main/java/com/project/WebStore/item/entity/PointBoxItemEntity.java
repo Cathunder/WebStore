@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -126,7 +127,7 @@ public class PointBoxItemEntity extends ItemEntity {
             .pointAmount(fixedPointDto.getPointAmount())
             .probability(fixedPointDto.getProbability())
             .build())
-        .toList();
+        .collect(Collectors.toList());
     this.fixedPointEntities.addAll(fixedPointEntities);
   }
 
@@ -137,7 +138,7 @@ public class PointBoxItemEntity extends ItemEntity {
             .minPoint(randomPointDto.getMinPoint())
             .maxPoint(randomPointDto.getMaxPoint())
             .build())
-        .toList();
+        .collect(Collectors.toList());
     this.randomPointEntities.addAll(randomPointEntities);
   }
 
