@@ -89,20 +89,17 @@ public class PurchasePointBoxItemService {
     stockService.decreaseStock(pointBoxItemEntity, purchaseQuantity);
 
     // 포인트 사용 기록 저장
-    log.info("포인트 사용 기록 저장");
     PointHistoryEntity pointHistoryEntityForUse
         = PointHistoryEntity.createEntityForUse(userEntity, pointBoxItemEntity, purchaseQuantity,
         purchaseHistoryEntity.getPurchasedAt());
     pointHistoryRepository.save(pointHistoryEntityForUse);
 
     // 유저 포인트 적립(구매 즉시 적립)
-    log.info("유저 포인트 적립(구매 즉시 적립)");
     int earnPoint = getEarnPoint(request, pointBoxItemEntity);
     userEntity.increasePoint(earnPoint);
     userRepository.save(userEntity);
 
     // 포인트 적립 기록 저장
-    log.info("포인트 적립 기록 저장");
     PointHistoryEntity pointHistoryEntityForEarn
         = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
     pointHistoryRepository.save(pointHistoryEntityForEarn);

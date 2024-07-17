@@ -1,10 +1,5 @@
 package com.project.WebStore.common.redis;
 
-import static com.project.WebStore.error.ErrorCode.INTERRUPTED_LOCK;
-import static com.project.WebStore.error.ErrorCode.NOT_ACQUIRE_LOCK;
-
-import com.project.WebStore.error.exception.WebStoreException;
-import com.project.WebStore.user.service.TransactionSynchronizationService;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +21,7 @@ public class DistributedLockAspect {
   private static final String REDISSON_LOCK_PREFIX = "LOCK: ";
 
   private final RedissonClient redissonClient;
-  private final TransactionSynchronizationService transactionSynchronizationService;
+  private final AopForTransaction aopForTransaction;
 
   @Around("@annotation(com.project.WebStore.common.redis.DistributedLock)")
   public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -34,7 +29,8 @@ public class DistributedLockAspect {
     Method method = signature.getMethod();
     DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
 
-    String lockKey = REDISSON_LOCK_PREFIX + CustomSpringELParser.getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.key());
+    String lockKey = REDISSON_LOCK_PREFIX
+        + CustomSpringELParser.getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.key());
     RLock lock = redissonClient.getLock(lockKey);
 
     long waitTime = distributedLock.waitTime();
@@ -43,24 +39,22 @@ public class DistributedLockAspect {
 
     try {
       if (lock.tryLock(waitTime, leaseTime, timeUnit)) {
-        log.info("락 획득: {}", lockKey);
-        try {
-          transactionSynchronizationService.registerLock(lock);
-          log.info("락 등록 완료: {}", lockKey);
-          return joinPoint.proceed();
-        } catch (Exception e) {
-          log.info("락 획득 중 에러발생: {}", lockKey);
-          lock.unlock(); // 예외 발생 시 락 해제
-          throw e;
-        }
+        log.info("락 획득 성공: {}", lockKey);
+        return aopForTransaction.proceed(joinPoint);
       } else {
-        log.info("락 획득 실패");
-        throw new WebStoreException(NOT_ACQUIRE_LOCK);
+        log.info("락 획득 실패: {}", lockKey);
+        return false;
       }
     } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
       log.info("InterruptedException");
-      throw new WebStoreException(INTERRUPTED_LOCK);
+      throw new InterruptedException();
+    } finally {
+      try {
+        log.info("락 해제: {}", lock.getName());
+        lock.unlock();
+      } catch (IllegalMonitorStateException e) {
+        log.info("이미 해제된 락: {}", lock.getName());
+      }
     }
   }
 }

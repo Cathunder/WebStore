@@ -36,10 +36,6 @@ public enum ErrorCode {
 
   // 히스토리
   HISTORY_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 히스토리 타입입니다."),
-
-  // redis
-  NOT_ACQUIRE_LOCK(HttpStatus.BAD_REQUEST, "구매 - 락 획득 실패"),
-  INTERRUPTED_LOCK(HttpStatus.BAD_REQUEST, "InterruptedException"),
   ;
 
   private final HttpStatus status;
