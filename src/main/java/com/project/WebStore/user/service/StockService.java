@@ -33,7 +33,7 @@ public class StockService {
       if (lock.tryLock(5, 3, TimeUnit.SECONDS)) {
         log.info("락 획득: {}", lockKey);
         try {
-//          transactionSynchronizationService.registerLock(lock);
+          transactionSynchronizationService.registerLock(lock);
           log.info("락 등록 완료: {}", lockKey);
           pointBoxItemEntity.decreaseStock(purchaseQuantity);
           pointBoxItemRepository.save(pointBoxItemEntity);
