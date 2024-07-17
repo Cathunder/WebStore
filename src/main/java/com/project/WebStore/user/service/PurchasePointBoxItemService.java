@@ -17,6 +17,7 @@ import com.project.WebStore.user.entity.PurchaseHistoryEntity;
 import com.project.WebStore.user.entity.UserEntity;
 import com.project.WebStore.user.repository.PointHistoryRepository;
 import com.project.WebStore.user.repository.PurchaseHistoryRepository;
+import com.project.WebStore.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,8 @@ public class PurchasePointBoxItemService {
   private final PointHistoryRepository pointHistoryRepository;
   private final PurchaseHistoryRepository purchaseHistoryRepository;
   private final PurchaseValidationCommonService purchaseValidationCommonService;
+  private final UserRepository userRepository;
+  private final StockService stockService;
 
   public PointBoxItemEntity getPointBoxItemEntity(Long id, ItemType type) {
     return pointBoxItemRepository.findByIdAndType(id, type)
@@ -74,6 +77,7 @@ public class PurchasePointBoxItemService {
 
     // 유저 포인트 차감
     userEntity.decreasePoint(getDecreasePoint(pointBoxItemEntity.getRequiredPoint(), purchaseQuantity));
+    userRepository.save(userEntity);
 
     // 아이템 구매 기록 저장
     PurchaseHistoryEntity purchaseHistoryEntity =
@@ -81,19 +85,24 @@ public class PurchasePointBoxItemService {
     purchaseHistoryRepository.save(purchaseHistoryEntity);
 
     // 아이템 재고 감소
-    pointBoxItemEntity.decreaseStock(purchaseQuantity);
+    log.info("아이템 재고 감소");
+    stockService.decreaseStock(pointBoxItemEntity, purchaseQuantity);
 
     // 포인트 사용 기록 저장
+    log.info("포인트 사용 기록 저장");
     PointHistoryEntity pointHistoryEntityForUse
         = PointHistoryEntity.createEntityForUse(userEntity, pointBoxItemEntity, purchaseQuantity,
         purchaseHistoryEntity.getPurchasedAt());
     pointHistoryRepository.save(pointHistoryEntityForUse);
 
     // 유저 포인트 적립(구매 즉시 적립)
+    log.info("유저 포인트 적립(구매 즉시 적립)");
     int earnPoint = getEarnPoint(request, pointBoxItemEntity);
     userEntity.increasePoint(earnPoint);
+    userRepository.save(userEntity);
 
     // 포인트 적립 기록 저장
+    log.info("포인트 적립 기록 저장");
     PointHistoryEntity pointHistoryEntityForEarn
         = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
     pointHistoryRepository.save(pointHistoryEntityForEarn);
