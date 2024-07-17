@@ -23,6 +23,14 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+#  profiles:
+#    active: test
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-token-exp-time: ${JWT_ACCESS_TOKEN_EXPTIME}

@@ -20,9 +20,11 @@ import com.project.WebStore.user.repository.PurchaseHistoryRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -58,7 +60,10 @@ public class PurchasePointBoxItemService {
 
   @Transactional
   public PurchaseDto.Response purchasePointBoxItem(
-      PointBoxItemEntity pointBoxItemEntity, UserEntity userEntity, PurchaseDto.Request request) {
+      PointBoxItemEntity pointBoxItemEntity, UserEntity userEntity, PurchaseDto.Request request
+  ) {
+    log.info("purchasePointBoxItem 시작");
+
     int purchaseQuantity = request.getQuantity();
 
     // 구매가능한지 공통부분 검증
@@ -92,6 +97,8 @@ public class PurchasePointBoxItemService {
     PointHistoryEntity pointHistoryEntityForEarn
         = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
     pointHistoryRepository.save(pointHistoryEntityForEarn);
+
+    log.info("purchasePointBoxItem 종료");
 
     // 구매 결과 반환
     List<PointHistoryEntity> pointHistoryEntities = List.of(pointHistoryEntityForUse, pointHistoryEntityForEarn);

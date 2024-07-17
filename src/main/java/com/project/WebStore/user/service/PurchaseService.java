@@ -6,6 +6,7 @@ import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.USER_NOT_FOUND;
 
+import com.project.WebStore.common.redis.DistributedLock;
 import com.project.WebStore.common.type.ItemType;
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.entity.CashItemEntity;
@@ -29,6 +30,7 @@ public class PurchaseService {
   private final PurchasePointBoxItemService purchasePointBoxItemService;
   private final PurchaseCashItemService purchaseCashItemService;
 
+  @DistributedLock(key = "'id-' + #itemId + '  type-' + #request.type")
   @Transactional
   public PurchaseDto.Response purchase(Long itemId, UserDetails userDetails, PurchaseDto.Request request) {
     UserEntity userEntity = getUserEntity(userDetails);
