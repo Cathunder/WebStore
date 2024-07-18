@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DistributedLockAspect {
 
-  private static final String REDISSON_LOCK_PREFIX = "LOCK: ";
+  private static final String REDISSON_LOCK_PREFIX = "lock name: ";
 
   private final RedissonClient redissonClient;
   private final AopForTransaction aopForTransaction;
@@ -39,10 +39,10 @@ public class DistributedLockAspect {
 
     try {
       if (lock.tryLock(waitTime, leaseTime, timeUnit)) {
-        log.info("락 획득 성공: {}", lockKey);
+        log.info("락 획득 성공 / {}", lockKey);
         return aopForTransaction.proceed(joinPoint);
       } else {
-        log.info("락 획득 실패: {}", lockKey);
+        log.info("락 획득 실패 / {}", lockKey);
         return false;
       }
     } catch (InterruptedException e) {
@@ -50,10 +50,10 @@ public class DistributedLockAspect {
       throw new InterruptedException();
     } finally {
       try {
-        log.info("락 해제: {}", lock.getName());
+        log.info("락 해제 / {}", lock.getName());
         lock.unlock();
       } catch (IllegalMonitorStateException e) {
-        log.info("이미 해제된 락: {}", lock.getName());
+        log.info("이미 해제된 락 / {}", lock.getName());
       }
     }
   }

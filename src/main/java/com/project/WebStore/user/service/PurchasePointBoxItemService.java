@@ -45,6 +45,7 @@ public class PurchasePointBoxItemService {
   private final PurchaseValidationCommonService purchaseValidationCommonService;
   private final UserRepository userRepository;
   private final StockService stockService;
+  private final PointService pointService;
 
   @Transactional
   public PurchaseDto.Response purchasePointBoxItem(
@@ -54,39 +55,37 @@ public class PurchasePointBoxItemService {
 
     int purchaseQuantity = request.getQuantity();
 
-    // 구매가능한지 공통부분 검증
+    log.info("구매가능한지 공통부분 검증");
     purchaseValidationCommonService.validatePurchaseCommon(userEntity, pointBoxItemEntity, purchaseQuantity);
 
-    // 포인트 박스 아이템 구매가능 검증
+    log.info("포인트 박스 아이템 구매가능 검증");
     validatePurchasePointBoxItem(pointBoxItemEntity, purchaseQuantity);
 
-    // 유저 포인트 차감
-    userEntity.decreasePoint(getDecreasePoint(pointBoxItemEntity.getRequiredPoint(), purchaseQuantity));
-    userRepository.save(userEntity);
+    log.info("유저 포인트 차감");
+    pointService.decreasePoint(pointBoxItemEntity, userEntity, purchaseQuantity);
 
-    // 아이템 구매 기록 저장
+    log.info("아이템 구매 기록 저장");
     PurchaseHistoryEntity purchaseHistoryEntity =
         PurchaseHistoryEntity.createEntity(userEntity, pointBoxItemEntity, purchaseQuantity);
     purchaseHistoryRepository.save(purchaseHistoryEntity);
 
-    // 아이템 재고 감소
     log.info("아이템 재고 감소");
     stockService.decreaseStock(pointBoxItemEntity, purchaseQuantity);
 
-    // 포인트 사용 기록 저장
-    PointHistoryEntity pointHistoryEntityForUse
-        = PointHistoryEntity.createEntityForUse(userEntity, pointBoxItemEntity, purchaseQuantity,
+    log.info("포인트 사용 기록 저장");
+    PointHistoryEntity pointHistoryEntityForUse =
+        PointHistoryEntity.createEntityForUse(userEntity, pointBoxItemEntity, purchaseQuantity,
         purchaseHistoryEntity.getPurchasedAt());
     pointHistoryRepository.save(pointHistoryEntityForUse);
 
-    // 유저 포인트 적립(구매 즉시 적립)
+    log.info("유저 포인트 적립(구매 즉시 적립)");
     int earnPoint = getEarnPoint(request, pointBoxItemEntity);
     userEntity.increasePoint(earnPoint);
     userRepository.save(userEntity);
 
-    // 포인트 적립 기록 저장
-    PointHistoryEntity pointHistoryEntityForEarn
-        = PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
+    log.info("포인트 적립 기록 저장");
+    PointHistoryEntity pointHistoryEntityForEarn =
+        PointHistoryEntity.createEntityForEarn(userEntity, pointBoxItemEntity, earnPoint, purchaseQuantity);
     pointHistoryRepository.save(pointHistoryEntityForEarn);
 
     log.info("purchasePointBoxItem 종료");
@@ -118,10 +117,6 @@ public class PurchasePointBoxItemService {
     if (pointBoxItemEntity.getStock() < purchaseQuantity) {
       throw new WebStoreException(INSUFFICIENT_STOCK);
     }
-  }
-
-  private int getDecreasePoint(int requiredPoint, int itemQuantity) {
-    return requiredPoint * itemQuantity;
   }
 
   private int getEarnPoint(PurchaseDto.Request request, PointBoxItemEntity pointBoxItemEntity) {
