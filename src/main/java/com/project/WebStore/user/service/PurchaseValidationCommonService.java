@@ -7,11 +7,9 @@ import static com.project.WebStore.error.ErrorCode.NOT_ENOUGH_POINT;
 
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.entity.ItemEntity;
-import com.project.WebStore.user.entity.PurchaseHistoryEntity;
 import com.project.WebStore.user.entity.UserEntity;
 import com.project.WebStore.user.repository.PurchaseHistoryRepository;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,20 +30,18 @@ public class PurchaseValidationCommonService {
       throw new WebStoreException(NOT_ENOUGH_POINT);
     }
 
-    List<PurchaseHistoryEntity> purchaseHistoryEntities = getPurchaseHistoryEntities(userEntity.getId(),
-        itemEntity.getName());
-    if (!purchaseHistoryEntities.isEmpty()) {
-      int totalQuantityPurchasedToday = purchaseHistoryEntities.stream()
-          .mapToInt(PurchaseHistoryEntity::getQuantity)
-          .sum();
+    Integer totalPurchasedQuantityToday = getTotalPurchasedQuantityToday(userEntity.getId(), itemEntity.getName());
 
-      if (totalQuantityPurchasedToday + purchaseQuantity > itemEntity.getDailyLimitCount()) {
-        throw new WebStoreException(DAILY_LIMIT_REACHED);
-      }
+    if (totalPurchasedQuantityToday == null) {
+      totalPurchasedQuantityToday = 0;
+    }
+
+    if (totalPurchasedQuantityToday + purchaseQuantity > itemEntity.getDailyLimitCount()) {
+      throw new WebStoreException(DAILY_LIMIT_REACHED);
     }
   }
 
-  private List<PurchaseHistoryEntity> getPurchaseHistoryEntities(Long userId, String itemName) {
-    return purchaseHistoryRepository.findAllByUserIdAndItemNameAndDate(userId, itemName, LocalDate.now());
+  private Integer getTotalPurchasedQuantityToday(Long userId, String itemName) {
+    return purchaseHistoryRepository.findTotalPurchasedQuantityToday(userId, itemName, LocalDate.now());
   }
 }
