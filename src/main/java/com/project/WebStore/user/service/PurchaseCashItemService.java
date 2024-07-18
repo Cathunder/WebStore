@@ -15,6 +15,7 @@ import com.project.WebStore.user.entity.UserEntity;
 import com.project.WebStore.user.repository.CashHistoryRepository;
 import com.project.WebStore.user.repository.PointHistoryRepository;
 import com.project.WebStore.user.repository.PurchaseHistoryRepository;
+import com.project.WebStore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class PurchaseCashItemService {
   private final PointHistoryRepository pointHistoryRepository;
   private final PurchaseHistoryRepository purchaseHistoryRepository;
   private final PurchaseValidationCommonService purchaseValidationCommonService;
+  private final UserRepository userRepository;
 
   public CashItemEntity getCashItemEntity(Long id) {
     return cashItemRepository.findById(id)
@@ -44,6 +46,7 @@ public class PurchaseCashItemService {
 
     // 유저 포인트 차감
     userEntity.decreasePoint(getDecreasePoint(cashItemEntity.getRequiredPoint(), purchaseQuantity));
+    userRepository.save(userEntity);
 
     // 아이템 구매 기록 저장
     PurchaseHistoryEntity purchaseHistoryEntity =
@@ -59,6 +62,7 @@ public class PurchaseCashItemService {
     // 유저 캐시 적립(구매 즉시 적립)
     int earnCash = getEarnCash(request, cashItemEntity);
     userEntity.increaseCash(earnCash);
+    userRepository.save(userEntity);
 
     // 캐시 적립 기록 저장
     CashHistoryEntity cashHistoryEntityForEarn
