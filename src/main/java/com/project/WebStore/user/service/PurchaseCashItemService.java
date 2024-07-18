@@ -1,8 +1,6 @@
 package com.project.WebStore.user.service;
 
 import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
-import static com.project.WebStore.user.util.PurchaseUtils.getDecreasePoint;
-import static com.project.WebStore.user.util.PurchaseUtils.getEarnCash;
 
 import com.project.WebStore.error.exception.WebStoreException;
 import com.project.WebStore.item.entity.CashItemEntity;
@@ -38,7 +36,9 @@ public class PurchaseCashItemService {
   }
 
   @Transactional
-  public PurchaseDto.Response purchaseCashItem(CashItemEntity cashItemEntity, UserEntity userEntity, PurchaseDto.Request request) {
+  public PurchaseDto.Response purchaseCashItem(
+      CashItemEntity cashItemEntity, UserEntity userEntity, PurchaseDto.Request request
+  ) {
     int purchaseQuantity = request.getQuantity();
 
     // 구매가능한지 공통부분 검증
@@ -71,5 +71,16 @@ public class PurchaseCashItemService {
 
     // 구매 결과 반환
     return PurchaseDto.Response.from(pointHistoryEntityForUse, cashHistoryEntityForEarn);
+  }
+
+
+  private int getDecreasePoint(int requiredPoint, int itemQuantity) {
+    return requiredPoint * itemQuantity;
+  }
+
+  private int getEarnCash(PurchaseDto.Request request, CashItemEntity cashItemEntity) {
+    int itemQuantity = request.getQuantity();
+    int cashAmount = cashItemEntity.getCashAmount();
+    return itemQuantity * cashAmount;
   }
 }
