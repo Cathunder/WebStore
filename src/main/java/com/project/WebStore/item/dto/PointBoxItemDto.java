@@ -25,7 +25,7 @@ public class PointBoxItemDto {
   private List<RandomPointDto> randomPointDtos = new ArrayList<>();
   private int requiredPoint;
   private int stock;
-  private String stockResetTime;
+  private int initialStock;
   private int dailyLimitCount;
   private String startedAt;
   private String endedAt;
@@ -41,7 +41,7 @@ public class PointBoxItemDto {
         .randomPointDtos(RandomPointDto.from(pointBoxItemEntity.getRandomPointEntities()))
         .requiredPoint(pointBoxItemEntity.getRequiredPoint())
         .stock(pointBoxItemEntity.getStock())
-        .stockResetTime(pointBoxItemEntity.getStockResetTime().format(DateTimeFormatter.ofPattern("HH시")))
+        .initialStock(pointBoxItemEntity.getInitialStock())
         .dailyLimitCount(pointBoxItemEntity.getDailyLimitCount())
         .startedAt(pointBoxItemEntity.getStartedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시")))
         .endedAt(pointBoxItemEntity.getEndedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시")))

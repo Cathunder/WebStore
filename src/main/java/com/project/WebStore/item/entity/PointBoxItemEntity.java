@@ -5,8 +5,10 @@ import static com.project.WebStore.common.type.ItemStatus.INACTIVE;
 import static com.project.WebStore.common.type.ItemType.FIXED_POINT_BOX_ITEM;
 import static com.project.WebStore.common.type.ItemType.RANDOM_POINT_BOX_ITEM;
 import static com.project.WebStore.error.ErrorCode.ALREADY_INACTIVE;
+import static com.project.WebStore.error.ErrorCode.INSUFFICIENT_STOCK;
 import static com.project.WebStore.error.ErrorCode.ITEM_NOT_FOUND;
 import static com.project.WebStore.error.ErrorCode.ITEM_TYPE_NOT_FOUND;
+import static com.project.WebStore.error.ErrorCode.SOLD_OUT;
 
 import com.project.WebStore.admin.entity.AdminEntity;
 import com.project.WebStore.common.type.ItemType;
@@ -22,9 +24,9 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,7 +48,7 @@ public class PointBoxItemEntity extends ItemEntity {
   private List<RandomPointEntity> randomPointEntities = new ArrayList<>();
 
   private int stock;
-  private LocalTime stockResetTime;
+  private int initialStock;
 
   private LocalDateTime startedAt;
   private LocalDateTime endedAt;
@@ -72,7 +74,7 @@ public class PointBoxItemEntity extends ItemEntity {
         .randomPointEntities(new ArrayList<>())
         .requiredPoint(request.getRequiredPoint())
         .stock(request.getStock())
-        .stockResetTime(request.getStockResetTime())
+        .initialStock(request.getInitialStock())
         .dailyLimitCount(request.getDailyLimitCount())
         .startedAt(request.getStartedAt())
         .endedAt(request.getEndedAt())
@@ -97,7 +99,7 @@ public class PointBoxItemEntity extends ItemEntity {
     this.name = request.getName();
     this.requiredPoint = request.getRequiredPoint();
     this.stock = request.getStock();
-    this.stockResetTime = request.getStockResetTime();
+    this.initialStock = request.getInitialStock();
     this.dailyLimitCount = request.getDailyLimitCount();
     this.startedAt = request.getStartedAt();
     this.endedAt = request.getEndedAt();
@@ -124,7 +126,7 @@ public class PointBoxItemEntity extends ItemEntity {
             .pointAmount(fixedPointDto.getPointAmount())
             .probability(fixedPointDto.getProbability())
             .build())
-        .toList();
+        .collect(Collectors.toList());
     this.fixedPointEntities.addAll(fixedPointEntities);
   }
 
@@ -135,7 +137,7 @@ public class PointBoxItemEntity extends ItemEntity {
             .minPoint(randomPointDto.getMinPoint())
             .maxPoint(randomPointDto.getMaxPoint())
             .build())
-        .toList();
+        .collect(Collectors.toList());
     this.randomPointEntities.addAll(randomPointEntities);
   }
 
@@ -144,5 +146,21 @@ public class PointBoxItemEntity extends ItemEntity {
       throw new WebStoreException(ALREADY_INACTIVE);
     }
     this.status = INACTIVE;
+  }
+
+  public void decreaseStock(int purchaseQuantity) {
+    if (this.stock <= 0) {
+      throw new WebStoreException(SOLD_OUT);
+    }
+
+    if (this.stock < purchaseQuantity) {
+      throw new WebStoreException(INSUFFICIENT_STOCK);
+    }
+
+    this.stock -= purchaseQuantity;
+  }
+
+  public void initializeStock() {
+    this.stock = initialStock;
   }
 }
