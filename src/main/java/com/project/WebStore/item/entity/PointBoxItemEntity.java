@@ -24,7 +24,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public class PointBoxItemEntity extends ItemEntity {
   private List<RandomPointEntity> randomPointEntities = new ArrayList<>();
 
   private int stock;
-  private LocalTime stockResetTime;
+  private int initialStock;
 
   private LocalDateTime startedAt;
   private LocalDateTime endedAt;
@@ -75,7 +74,7 @@ public class PointBoxItemEntity extends ItemEntity {
         .randomPointEntities(new ArrayList<>())
         .requiredPoint(request.getRequiredPoint())
         .stock(request.getStock())
-        .stockResetTime(request.getStockResetTime())
+        .initialStock(request.getInitialStock())
         .dailyLimitCount(request.getDailyLimitCount())
         .startedAt(request.getStartedAt())
         .endedAt(request.getEndedAt())
@@ -100,7 +99,7 @@ public class PointBoxItemEntity extends ItemEntity {
     this.name = request.getName();
     this.requiredPoint = request.getRequiredPoint();
     this.stock = request.getStock();
-    this.stockResetTime = request.getStockResetTime();
+    this.initialStock = request.getInitialStock();
     this.dailyLimitCount = request.getDailyLimitCount();
     this.startedAt = request.getStartedAt();
     this.endedAt = request.getEndedAt();
@@ -159,5 +158,9 @@ public class PointBoxItemEntity extends ItemEntity {
     }
 
     this.stock -= purchaseQuantity;
+  }
+
+  public void initializeStock() {
+    this.stock = initialStock;
   }
 }
