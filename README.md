@@ -1,14 +1,14 @@
 # 웹스토어
-포인트를 사용해 아이템을 구매하고 적립할 수 있는 웹스토어 서비스입니다.
+포인트를 사용해 포인트 상자를 구매하거나 캐시로 교환할 수 있는 웹 스토어입니다.
 
 ## 사용기술
-<div align=center> 
+<div> 
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
-  <br>
+  </br>
   <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
   <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
   <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
-  <br>
+  </br>
   <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
   <img src="https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white">
 </div>
@@ -21,10 +21,8 @@
 - 회원가입
   - 이메일, 비밀번호, 닉네임
   - 가입 시 일정 포인트 제공
-  - 구글 OAuth2 사용
 - 로그인
   - 이메일, 비밀번호, JWT
-  - 구글 OAuth2 사용
 - 포인트 내역 조회
   - 구매 아이템명, 포인트 증감 수치, 적립/사용 여부, 적립/사용 날짜
 - 캐시 내역 조회
@@ -35,7 +33,6 @@
 
 ### [아이템 구매]
 - 판매 아이템 조회
-  - 조회시 캐싱 사용
 - 포인트를 지불하여 아이템 구매 가능
   - 로그인된 유저만 구매 가능
   - 아이템 구매 즉시 포인트 또는 캐시가 적립됨
@@ -69,12 +66,10 @@
   - 아이템명, 아이템 수량, 구매에 필요한 포인트, 적립되는 포인트 등
 - 유저의 포인트 내역 조회
   - 유저 이메일, 구매 아이템명, 포인트 증감 수치, 적립/사용 여부, 적립/사용 날짜
-  - 캐싱기능 사용
 - 유저의 캐시 내역 조회
-- 핫딜, 이벤트 등의 알림 전송
-  - 특정 시간에 해당 알림을 전송할 수 있는 기능
-  - WebSocket 사용
 
-### [채팅 문의]
-- 유저와 관리자간 1:1 문의 채팅
-- WebSocket 사용
+## 추가로 구현할 기능
+- 소셜 로그인 기능 추가(구글, 카카오, 네이버)
+- 조회시 캐싱 기능 추가
+- SSE를 사용한 실시간 알림 전송 기능 추가(ex. 이벤트 하루전 알림 전송)
+- WebSocket을 사용한 유저, 관리자간 1:1 문의 채팅 기능 추가
